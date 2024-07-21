@@ -1,12 +1,15 @@
 [gd_scene load_steps=4 format=3 uid="uid://cuyibogomoudd"]
 
 [ext_resource type="Script" path="res://map/cells/cell.gd" id="1_ulbue"]
-[ext_resource type="Texture2D" uid="uid://bdotp6kytn80x" path="res://icon.svg" id="2_111jb"]
 [ext_resource type="PackedScene" uid="uid://c6jx3glnxxis" path="res://map/cells/elements/cell_element.tscn" id="2_k6an0"]
+[ext_resource type="Texture2D" uid="uid://d1hbyhc7hnmuy" path="res://main/misc.webp" id="3_26i0j"]
 
 [node name="Cell" type="Node2D"]
 script = ExtResource("1_ulbue")
 element_scene = ExtResource("2_k6an0")
 
 [node name="Floor" type="Sprite2D" parent="."]
-texture = ExtResource("2_111jb")
+texture = ExtResource("3_26i0j")
+hframes = 4
+vframes = 2
+frame = 1

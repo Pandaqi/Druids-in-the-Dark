@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://doo8wo6x48f0n"]
+[gd_scene load_steps=15 format=3 uid="uid://doo8wo6x48f0n"]
 
 [ext_resource type="Texture2D" uid="uid://bdotp6kytn80x" path="res://icon.svg" id="1_arys7"]
 [ext_resource type="Script" path="res://modules/visuals.gd" id="1_fbtq4"]
@@ -12,6 +12,8 @@
 [ext_resource type="Script" path="res://modules/recipe_reader.gd" id="10_dkre7"]
 [ext_resource type="Script" path="res://modules/element_grabber.gd" id="11_ek5mr"]
 [ext_resource type="Script" path="res://modules/element_dropper.gd" id="12_txocr"]
+[ext_resource type="Script" path="res://modules/player_shadow.gd" id="13_bqttd"]
+[ext_resource type="Texture2D" uid="uid://d1hbyhc7hnmuy" path="res://main/misc.webp" id="14_8f2d5"]
 
 [node name="Player" type="Node2D" groups=["Players"]]
 script = ExtResource("1_q6yen")
@@ -50,3 +52,12 @@ script = ExtResource("11_ek5mr")
 
 [node name="ElementDropper" type="Node" parent="."]
 script = ExtResource("12_txocr")
+
+[node name="PlayerShadow" type="Node2D" parent="."]
+script = ExtResource("13_bqttd")
+
+[node name="Sprite2D" type="Sprite2D" parent="PlayerShadow"]
+modulate = Color(0.141176, 0.141176, 0.141176, 0.862745)
+texture = ExtResource("14_8f2d5")
+hframes = 4
+vframes = 2

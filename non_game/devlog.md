@@ -105,7 +105,7 @@ Similarly, the _timer_ on the order is also displayed by turning the cell itself
 
 ## How's that?
 
-All of this was fine! But, as usual, you start out by putting _too much stuff_ in the game and then have to simplify.
+All of this felt ... fine? But, as usual, you start out by putting _too much stuff_ in the game and then have to simplify.
 
 I realized a few things.
 
@@ -115,4 +115,35 @@ I realized a few things.
 * I considered that it might be even simpler if you simply lose the game as soon as you try to deliver the wrong potion to a customer. (Instead of the extra step of adding a timer.) This, however, would remove the _only_ aspect of the game that adds _urgency_! Without those timers, you can walk around extremely slowly and carefully, making almost no mistakes, which does not make it more fun.
 
 At this point, I desperately needed some simple sprites to see what the hell I'm even doing. I also decided it was time to already craft the tutorial for the game. I like to do this early because it clearly highlights if it's simple enough or where it should be streamlined further. (And to make sure we don't forget at the end :p)
+
+And so I did. I created most assets I'd need---some already pretty and final, some just a crude sketch---and plugged them into the game.
+
+This finally allowed me to play the game, missing only the inventory display. (So I couldn't actually see what was in my inventory, or what specific order somebody wanted.)
+
+And by playing through the game, I stumbled upon a few major problems that stand in the way of an actual functioning game.
+
+## The Second Attempt
+
+### Major Problem: no "new" recipes or combinations
+
+Currently, the only way to get ingredients is by walking through a potion, which dissolves into its separate components. But ... those potions are the _exact thing_ that customers want. So, 90% of the time, walking through a potion and just collecting whatever comes out is _all you need to do_. Pretty boring, not much depth.
+
+I see this as a major flaw at the _core_ of the game. With the current setup, you never actually have to build something new from the components you get, and remembering where 2 or 3 ingredients are hidden isn't that hard.
+
+How do we solve this?
+
+* By forcing you to juggle more things at once.
+* By making the core action---movement/navigating with uncertainty---harder.
+* By rethinking the rules around recipes and ingredients to get more variety and creativity.
+
+I wrote down 15+ possible solutions. Some of them excluded the others, some could be used together.
+
+I've learned to simply implement all these rules tweaks or extra systems, but place them behind an easy debugging toggle so I can turn game mechanics on/off at a dime. This way, I can try all solutions, abandon those that don't work, without needing to copy-paste code, or comment out parts of it, or potentially ruin the other code from all the doing and undoing of ideas.
+
+Some solutions were straightforward. For example: just place more garbage bins. This makes it much harder to navigate without accidentally losing what you have.
+
+Some solutions were wacky or more complicated, but those are always the ones that feel most impactful and promising. For example: "The longer/more something is in shadow, the more likely it is to _mutate_ into something else." People change their orders, ingredients are suddenly something else, and you need to keep paying attention.
+
+
+
 

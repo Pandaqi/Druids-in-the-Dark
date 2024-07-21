@@ -20,9 +20,10 @@ var machine = null
 @onready var floor_sprite = $Floor
 
 func visualize(cell_size:float):
+	floor_sprite.set_rotation(randi_range(0,3)*0.5*PI)
+	floor_sprite.modulate = Color(1.0, 1.0, 1.0, randf_range(0.85, 1.0)).darkened(randf_range(0, 0.167))
 	set_position(cell_size * Vector2(pos))
-	if disabled: 
-		modulate.a = 0.5
+	set_visible(not disabled)
 
 ### Player management
 func get_players():
@@ -50,9 +51,12 @@ func get_element() -> CellElement:
 
 func add_element(e:String):
 	var node = element_scene.instantiate()
-	node.set_type(e)
 	add_child(node)
+	node.set_type(e)
 	element = node
+	
+	node.set_scale(1.1*Vector2.ONE)
+	get_tree().create_tween().tween_property(node, "scale", Vector2.ONE, 0.15)
 
 func remove_element():
 	element.queue_free()
@@ -66,9 +70,12 @@ func add_machine(type:String):
 	machine_type = type
 	
 	var node = element_scene.instantiate()
-	node.set_type(type) 
 	add_child(node)
+	node.set_type(type) 
 	machine_node = node
+	
+	node.set_scale(1.1*Vector2.ONE)
+	get_tree().create_tween().tween_property(node, "scale", Vector2.ONE, 0.15)
 	
 	var module_scene = GDict.MACHINES[type].module_scene
 	if module_scene:
@@ -88,6 +95,22 @@ func is_edge(grid_size:Vector2i) -> bool:
 	return pos.x <= 0 || pos.y <= 0 || pos.x >= (grid_size.x-1) || pos.y >= (grid_size.y-1)
 
 func set_shadow(val:bool) -> void:
+	var changed = shadow != val
+	if not changed: return
+	
 	shadow = val
-	if element: element.set_visible(not val)
-	if machine_type: machine_node.set_visible(not val)
+	
+	var start_alpha = 0.0
+	var end_alpha = 1.0
+	if shadow: 
+		start_alpha = 1.0
+		end_alpha = 0.0
+	
+	var tween_dur = 0.1
+	
+	if element: 
+		element.modulate.a = start_alpha
+		get_tree().create_tween().tween_property(element, "modulate:a", end_alpha, tween_dur)
+	if machine_type: 
+		machine_node.modulate.a = start_alpha
+		get_tree().create_tween().tween_property(machine_node, "modulate:a", end_alpha, tween_dur)

@@ -5,6 +5,11 @@ var items : Array[String] = []
 func activate():
 	pass
 
+func add_content(item:String):
+	items.append(item)
+	items.sort()
+	visualize()
+
 func set_content(new_items:Array[String]):
 	items = new_items
 	items.sort()

@@ -1,11 +1,11 @@
 class_name Map extends Node2D
 
-const CELL_SIZE = 128.0
+const CELL_SIZE = 512.0
 const NB_OFFSETS = [Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT, Vector2i.UP]
 
 # we use a 1D array because GDScript doesn't support typed multidimensional arrays :/
 var grid : Array[Cell] = []
-var size : Vector2i = Vector2i(7,5)
+var size : Vector2i = Vector2i(8,6)
 @export var cell_scene : PackedScene
 
 func activate(prog:Progression) -> void:

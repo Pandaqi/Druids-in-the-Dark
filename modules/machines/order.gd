@@ -12,6 +12,7 @@ func _ready():
 
 func add_recipe(r:String) -> void:
 	self.recipe = r
+	self.add_to_group("Customers")
 
 func get_recipe() -> String:
 	return recipe

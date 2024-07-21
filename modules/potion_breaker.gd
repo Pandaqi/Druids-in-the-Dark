@@ -5,6 +5,7 @@ var recipes : Recipes
 
 func activate(map:Map, recipes:Recipes, grid_mover:ModuleGridMover):
 	self.map = map
+	self.recipes = recipes
 	grid_mover.cell_entered.connect(on_cell_entered)
 
 func on_cell_entered(cell:Cell):
@@ -13,13 +14,15 @@ func on_cell_entered(cell:Cell):
 	if not elem: return
 	if not elem.is_potion(): return
 	
+	# @NOTE: This ensures shadows are correct when we try to do this
+	await get_tree().process_frame
+	
 	# disassemble into the right elements
-	var components = recipes.get_components_for(elem)
+	var components = recipes.get_components_for(elem.type)
 	
 	# distribute over valid cells
-	# @TODO: write this dynamic query function
 	var cells_allowed : Array[Cell] = map.query_cells({
-		"shadow": true,
+		"shadow": false,
 		"empty": true
 	})
 	cells_allowed.shuffle()

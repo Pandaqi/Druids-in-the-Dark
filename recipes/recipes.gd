@@ -34,7 +34,7 @@ func generate(progression:Progression):
 	
 	print(dict)
 
-func get_components_for(potion:String) -> Array[String]:
+func get_components_for(potion:String) -> Array:
 	return dict[potion].duplicate(false)
 
 func count() -> int:

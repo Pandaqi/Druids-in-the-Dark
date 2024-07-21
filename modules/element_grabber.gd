@@ -10,6 +10,7 @@ func on_cell_entered(cell:Cell):
 	# no element here, do nothing
 	var elem = cell.get_element()
 	if not elem: return
+	if not elem.is_component(): return
 	
 	inventory.add_content(elem.type)
 	cell.remove_element()
