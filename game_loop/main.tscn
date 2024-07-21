@@ -1,0 +1,37 @@
+[gd_scene load_steps=10 format=3 uid="uid://h73dtaf2hvjv"]
+
+[ext_resource type="Script" path="res://map/map.gd" id="1_ece51"]
+[ext_resource type="Script" path="res://main/main.gd" id="1_kh0sr"]
+[ext_resource type="PackedScene" uid="uid://cuyibogomoudd" path="res://map/cells/cell.tscn" id="2_7akcu"]
+[ext_resource type="Script" path="res://players/players.gd" id="4_v6q56"]
+[ext_resource type="PackedScene" uid="uid://doo8wo6x48f0n" path="res://players/player/player.tscn" id="5_mrvgd"]
+[ext_resource type="Script" path="res://recipes/recipes.gd" id="6_mabfd"]
+[ext_resource type="Script" path="res://map/shadows.gd" id="7_5p1vu"]
+[ext_resource type="Script" path="res://main/progression.gd" id="8_lignf"]
+[ext_resource type="Script" path="res://main/camera.gd" id="9_ti44r"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_kh0sr")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+script = ExtResource("9_ti44r")
+
+[node name="Map" type="Node2D" parent="."]
+script = ExtResource("1_ece51")
+cell_scene = ExtResource("2_7akcu")
+
+[node name="Shadows" type="Node2D" parent="."]
+script = ExtResource("7_5p1vu")
+
+[node name="Players" type="Node2D" parent="."]
+script = ExtResource("4_v6q56")
+player_scene = ExtResource("5_mrvgd")
+
+[node name="Recipes" type="Node" parent="."]
+script = ExtResource("6_mabfd")
+
+[node name="Progression" type="Node" parent="."]
+script = ExtResource("8_lignf")
+
+[node name="Timer" type="Timer" parent="Progression"]
+wait_time = 5.0

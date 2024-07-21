@@ -1,0 +1,52 @@
+[gd_scene load_steps=13 format=3 uid="uid://doo8wo6x48f0n"]
+
+[ext_resource type="Texture2D" uid="uid://bdotp6kytn80x" path="res://icon.svg" id="1_arys7"]
+[ext_resource type="Script" path="res://modules/visuals.gd" id="1_fbtq4"]
+[ext_resource type="Script" path="res://players/player/player.gd" id="1_q6yen"]
+[ext_resource type="Script" path="res://modules/input.gd" id="2_allid"]
+[ext_resource type="Script" path="res://modules/grid_mover.gd" id="3_5ayq0"]
+[ext_resource type="Script" path="res://modules/player_interactor.gd" id="6_ro2hm"]
+[ext_resource type="Script" path="res://modules/potion_breaker.gd" id="7_5maq8"]
+[ext_resource type="Script" path="res://modules/order_giver.gd" id="8_j2uu7"]
+[ext_resource type="Script" path="res://modules/inventory/inventory.gd" id="9_u3cna"]
+[ext_resource type="Script" path="res://modules/recipe_reader.gd" id="10_dkre7"]
+[ext_resource type="Script" path="res://modules/element_grabber.gd" id="11_ek5mr"]
+[ext_resource type="Script" path="res://modules/element_dropper.gd" id="12_txocr"]
+
+[node name="Player" type="Node2D" groups=["Players"]]
+script = ExtResource("1_q6yen")
+
+[node name="Visuals" type="Node2D" parent="."]
+script = ExtResource("1_fbtq4")
+
+[node name="Sprite2D" type="Sprite2D" parent="Visuals"]
+modulate = Color(0.688864, 0.417787, 0.985605, 1)
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_arys7")
+
+[node name="Inventory" type="Node2D" parent="."]
+script = ExtResource("9_u3cna")
+
+[node name="Input" type="Node" parent="."]
+script = ExtResource("2_allid")
+
+[node name="GridMover" type="Node" parent="."]
+script = ExtResource("3_5ayq0")
+
+[node name="PlayerInteractor" type="Node" parent="."]
+script = ExtResource("6_ro2hm")
+
+[node name="PotionBreaker" type="Node" parent="."]
+script = ExtResource("7_5maq8")
+
+[node name="OrderGiver" type="Node" parent="."]
+script = ExtResource("8_j2uu7")
+
+[node name="RecipeReader" type="Node" parent="."]
+script = ExtResource("10_dkre7")
+
+[node name="ElementGrabber" type="Node" parent="."]
+script = ExtResource("11_ek5mr")
+
+[node name="ElementDropper" type="Node" parent="."]
+script = ExtResource("12_txocr")
