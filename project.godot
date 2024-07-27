@@ -17,11 +17,14 @@ config/icon="res://icon.svg"
 
 [autoload]
 
-GInput="*res://input/GInput.gd"
 GDict="*res://game_loop/GDict.gd"
+GConfig="*res://game_loop/GConfig.gd"
+GInput="*res://input/GInput.gd"
 
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
 environment/defaults/default_clear_color=Color(0.0862745, 0, 0.168627, 1)
+anti_aliasing/quality/screen_space_aa=1
+2d/snap/snap_2d_transforms_to_pixel=true

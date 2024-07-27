@@ -14,10 +14,22 @@ func on_cell_entered(cell:Cell):
 	if machine != "order": return
 	if not cell.machine.is_occupied(): return
 	
-	var potion = cell.machine.get_recipe()
+	var order_elements = cell.machine.get_order()
 	
-	# check if we match
-	var needed_components : Array = recipes.get_components_for(potion)
+	# destroy all potions into their components
+	# so we just have a flat list of ingredients to match
+	var needed_components : Array[String] = []
+	var potion_inside_order = null
+	for elem in order_elements:
+		var is_potion = (elem in GDict.POTIONS)
+		if is_potion:
+			var potion_components : Array[String] = recipes.get_components_for(elem)
+			needed_components += potion_components
+			potion_inside_order = elem
+		else:
+			needed_components.append(elem)
+	
+	# check if we match EXACTLY
 	var our_components : Array[String] = inventory.get_content()
 	var missing_components : int = 0
 	for comp in needed_components:
@@ -25,8 +37,13 @@ func on_cell_entered(cell:Cell):
 		our_components.erase(comp)
 	
 	var is_match = our_components.size() <= 0 and missing_components <= 0
-	if not is_match: return
+	cell.machine.on_visit(is_match, inventory)
+	if not is_match: 
+		return
 	
 	inventory.clear()
 	cell.remove_machine()
 	recipes.on_order_delivered()
+	
+	if GConfig.potion_delivery_regenerates_recipe and potion_inside_order:
+		recipes.regenerate_potion(potion_inside_order)

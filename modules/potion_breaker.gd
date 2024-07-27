@@ -20,15 +20,18 @@ func on_cell_entered(cell:Cell):
 	# disassemble into the right elements
 	var components = recipes.get_components_for(elem.type)
 	
+	if GConfig.potion_garbage_can_appear and randf() <= GConfig.potion_garbage_prob:
+		components.append(GDict.get_random_mutation())
+	
 	# distribute over valid cells
 	var cells_allowed : Array[Cell] = map.query_cells({
 		"shadow": false,
-		"empty": true
+		"empty": true,
+		"num": components.size()
 	})
-	cells_allowed.shuffle()
-	var cells_chosen = cells_allowed.slice(0, components.size())
-	for i in range(cells_chosen.size()):
-		cells_chosen[i].add_element(components[i])
+
+	for i in range(cells_allowed.size()):
+		cells_allowed[i].add_element(components[i])
 	
 	# remove the actual potion
 	cell.remove_element()

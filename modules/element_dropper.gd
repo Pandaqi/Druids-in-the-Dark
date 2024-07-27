@@ -9,7 +9,7 @@ func activate(grid_mover:ModuleGridMover, inv:ModuleInventory):
 func on_cell_entered(cell:Cell):
 	# can't drop here
 	var machine = cell.get_machine_type()
-	if machine != "bin": return
+	if machine != "garbage_bin": return
 	
 	for elem in inventory.get_content():
 		cell.machine.add_content(elem)

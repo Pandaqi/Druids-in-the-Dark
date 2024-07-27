@@ -1,28 +1,75 @@
 class_name ModuleOrder extends Node2D
 
-# @TODO: save the recipe we want, display it, update a timer
-var recipe:String = ""
 @onready var timer : Timer = $Timer
+@onready var inventory : ModuleInventory = $Inventory
+@onready var cell_element : CellElement = get_parent()
+@onready var cell : Cell = get_parent().get_parent()
+var tween_occupied : Tween
+var visited := false
 
 func _ready():
-	# @TODO: slightly randomize the duration? make it depend on other factors?
-	timer.wait_time = randf_range(25,60)
-	timer.timeout.connect(on_timer_timeout)
-	timer.start()
+	
+	if GConfig.order_only_visible_after_visit:
+		inventory.set_visible(false)
 
 func add_recipe(r:String) -> void:
-	self.recipe = r
 	self.add_to_group("Customers")
+	inventory.add_content(r)
+	start_timer()
 
-func get_recipe() -> String:
-	return recipe
+func get_order() -> Array[String]:
+	return inventory.get_content()
 
-func is_occupied():
-	return recipe != ""
+func is_occupied() -> bool:
+	return inventory.has_content()
+
+func start_timer():
+	var order_dur_scalar = GConfig.order_duration_scalar[GInput.get_player_count()]
+	timer.wait_time = randf_range(GConfig.def_order_duration.min, GConfig.def_order_duration.max) * order_dur_scalar
+	timer.timeout.connect(on_timer_timeout)
+	timer.start()
+	
+	tween_occupied = get_tree().create_tween()
+	var dur = 0.75
+	tween_occupied.tween_property(cell_element, "modulate:a", 0, dur)
+	tween_occupied.tween_property(cell_element, "modulate:a", 1, dur)
+	tween_occupied.set_loops(1000)
+
+func change_timer(dt:float):
+	var new_time_left = timer.time_left + dt
+	timer.stop()
+	timer.start(new_time_left)
 
 func _physics_process(dt:float) -> void:
-	var timer_left = timer.time_left / timer.wait_time
-	# @TODO: display/use this for progress bar
+	if is_occupied():
+		var timer_left = timer.time_left / timer.wait_time
+		cell.floor_sprite.set_scale(timer_left * Vector2.ONE)
+
+func finish():
+	print("SHOULD FINISH ORDER")
+	tween_occupied.kill()
+	inventory.clear()
+	remove_from_group("Customers")
+	cell.floor_sprite.set_scale(Vector2.ONE)
 
 func on_timer_timeout():
+	finish()
 	GDict.emit_signal("game_over", false)
+
+func on_visit(is_match:bool, visitor_inventory:ModuleInventory):
+	visited = true
+	
+	if GConfig.order_only_visible_after_visit:
+		inventory.set_visible(true)
+	
+	if GConfig.customer_visit_delays_timer and not is_match:
+		var avg_timer : float = (GConfig.def_order_duration.min + GConfig.dev_order_duration.max)
+		var delay = 0.5 * avg_timer * GConfig.customer_timer_delay_scalar
+		cell.machine.change_timer(delay)
+	
+	if GConfig.wrong_order_is_garbage and not is_match:
+		visitor_inventory.clear()
+	
+	if GConfig.wrong_order_moves_machines and not is_match:
+		GDict.emit_signal("map_shuffle")
+	

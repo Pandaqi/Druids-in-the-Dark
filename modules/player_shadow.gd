@@ -3,7 +3,7 @@ class_name ModulePlayerShadow extends Node2D
 @onready var sprite : Sprite2D = $Sprite2D
 @onready var entity = get_parent()
 
-var range : int = 2
+var range : int = GConfig.def_shadow_size[GInput.get_player_count()]
 
 func activate():
 	update_range(0)

@@ -1,9 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://qja8xfh8upw2"]
+[gd_scene load_steps=3 format=3 uid="uid://qja8xfh8upw2"]
 
 [ext_resource type="Script" path="res://modules/machines/order.gd" id="1_vsjjw"]
+[ext_resource type="Script" path="res://modules/inventory/inventory.gd" id="2_7o0hn"]
 
 [node name="Order" type="Node2D"]
 script = ExtResource("1_vsjjw")
 
 [node name="Timer" type="Timer" parent="."]
 one_shot = true
+
+[node name="Inventory" type="Node2D" parent="."]
+script = ExtResource("2_7o0hn")

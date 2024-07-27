@@ -18,6 +18,15 @@
 [node name="Player" type="Node2D" groups=["Players"]]
 script = ExtResource("1_q6yen")
 
+[node name="PlayerShadow" type="Node2D" parent="."]
+script = ExtResource("13_bqttd")
+
+[node name="Sprite2D" type="Sprite2D" parent="PlayerShadow"]
+modulate = Color(0.141176, 0.141176, 0.141176, 0.862745)
+texture = ExtResource("14_8f2d5")
+hframes = 4
+vframes = 2
+
 [node name="Visuals" type="Node2D" parent="."]
 script = ExtResource("1_fbtq4")
 
@@ -52,12 +61,3 @@ script = ExtResource("11_ek5mr")
 
 [node name="ElementDropper" type="Node" parent="."]
 script = ExtResource("12_txocr")
-
-[node name="PlayerShadow" type="Node2D" parent="."]
-script = ExtResource("13_bqttd")
-
-[node name="Sprite2D" type="Sprite2D" parent="PlayerShadow"]
-modulate = Color(0.141176, 0.141176, 0.141176, 0.862745)
-texture = ExtResource("14_8f2d5")
-hframes = 4
-vframes = 2

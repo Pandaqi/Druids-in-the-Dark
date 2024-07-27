@@ -5,9 +5,9 @@ var progression:Progression
 
 func activate(progression:Progression):
 	self.progression = progression
-	generate(progression)
+	generate()
 
-func generate(progression:Progression):
+func generate():
 	var potions := progression.get_available_potions()
 	var elements := progression.get_available_elements()
 	var max_length := progression.get_potion_max_length()
@@ -17,8 +17,8 @@ func generate(progression:Progression):
 		var combo_length = i % max_length
 		elements_needed += combo_length
 	
-	var num_per_element = ceil(float(elements_needed) / elements.size())
-	var all_elements = []
+	var num_per_element : int = ceil(float(elements_needed) / elements.size())
+	var all_elements : Array[String] = []
 	for elem in elements:
 		for i in range(num_per_element):
 			all_elements.append(elem)
@@ -34,8 +34,17 @@ func generate(progression:Progression):
 	
 	print(dict)
 
-func get_components_for(potion:String) -> Array:
-	return dict[potion].duplicate(false)
+func regenerate_potion(potion:String):
+	var cur_length = dict[potion].size()
+	var new_elems = progression.get_available_elements()
+	new_elems.shuffle()
+	dict[potion] = new_elems.slice(0, cur_length)
+
+func get_components_for(potion:String) -> Array[String]:
+	var arr : Array[String] = []
+	for elem in dict[potion]:
+		arr.append(elem as String)
+	return arr
 
 func count() -> int:
 	return dict.keys().size()

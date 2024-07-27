@@ -1,6 +1,5 @@
 extends Camera2D
 
-const EDGE_MARGIN := Vector2(64.0, 64.0)
 const MOVE_SPEED := 7.0
 const ZOOM_SPEED := 4.0
 
@@ -18,7 +17,7 @@ func fit_bounds_in_view(dt:float):
 	
 	var target_position := map_bounds.get_center()
 	
-	var vp_size := get_viewport_rect().size - 2*EDGE_MARGIN
+	var vp_size := get_viewport_rect().size - 2*GConfig.camera_edge_margin
 	var map_size := map_bounds.size
 	var ratios := vp_size / map_size
 	

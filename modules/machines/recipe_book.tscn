@@ -1,6 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://dq0iws4mo44mc"]
+[gd_scene load_steps=3 format=3 uid="uid://dq0iws4mo44mc"]
 
 [ext_resource type="Script" path="res://modules/machines/recipe_book.gd" id="1_kufv1"]
+[ext_resource type="Script" path="res://modules/inventory/inventory.gd" id="2_n3uci"]
 
 [node name="RecipeBook" type="Node2D"]
 script = ExtResource("1_kufv1")
+
+[node name="InventoryHigh" type="Node2D" parent="."]
+position = Vector2(0, -128)
+script = ExtResource("2_n3uci")
+
+[node name="InventoryLow" type="Node2D" parent="."]
+position = Vector2(0, 128)
+script = ExtResource("2_n3uci")

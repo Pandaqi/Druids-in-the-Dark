@@ -1,6 +1,5 @@
 class_name Map extends Node2D
 
-const CELL_SIZE = 512.0
 const NB_OFFSETS = [Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT, Vector2i.UP]
 
 # we use a 1D array because GDScript doesn't support typed multidimensional arrays :/
@@ -9,6 +8,10 @@ var size : Vector2i = Vector2i(8,6)
 @export var cell_scene : PackedScene
 
 func activate(prog:Progression) -> void:
+	GDict.map_shuffle.connect(on_map_shuffle_requested)
+	var raw_size : Vector2 = (Vector2(GConfig.def_map_size) * GConfig.map_size_scalar[GInput.get_player_count()])
+	size = raw_size.round()
+	
 	generate(prog)
 
 func generate(prog:Progression) -> void:
@@ -102,7 +105,7 @@ func assign_machines():
 
 func visualize_grid():
 	for cell in grid:
-		cell.visualize(CELL_SIZE)
+		cell.visualize()
 
 func get_random_position() -> Vector2i:
 	return Vector2i(randi_range(0, size.x), randi_range(0, size.y))
@@ -114,43 +117,60 @@ func grid_id_to_pos(id:int) -> Vector2i:
 	return Vector2i(id % size.x, floor(id / size.x))
 
 func grid_pos_to_real_pos(grid_pos:Vector2i) -> Vector2:
-	return CELL_SIZE * Vector2(grid_pos)
+	return GConfig.cell_size * Vector2(grid_pos)
 
 func real_pos_to_grid_pos(real_pos:Vector2) -> Vector2i:
-	return Vector2i(floor(real_pos.x / CELL_SIZE), floor(real_pos.y / CELL_SIZE))
+	return Vector2i(floor(real_pos.x / GConfig.cell_size), floor(real_pos.y / GConfig.cell_size))
 
 func get_cell_at(grid_pos:Vector2i) -> Cell:
 	return grid[pos_to_grid_id(grid_pos)]
 
-func is_valid_cell(grid_pos:Vector2i) -> bool:
+func is_valid_cell(grid_pos:Vector2i, for_movement := false) -> bool:
 	if out_of_bounds(grid_pos): return false
-	if is_hole_at(grid_pos): return false
+	if is_hole_at(grid_pos, for_movement): return false
 	return true
 
 func out_of_bounds(grid_pos:Vector2i) -> bool:
 	return grid_pos.x < 0 or grid_pos.x >= size.x or grid_pos.y < 0 or grid_pos.y >= size.y
 
-func is_hole_at(grid_pos:Vector2i) -> bool:
+func is_hole_at(grid_pos:Vector2i, for_movement := false) -> bool:
+	if GConfig.disabled_cells_kill_you and for_movement: return false
 	return get_cell_at(grid_pos).disabled
 
 func get_pos_after_move(grid_pos:Vector2i, vec:Vector2i) -> Vector2i:
 	var new_pos = grid_pos + vec
-	if not is_valid_cell(new_pos): return grid_pos
+	if not is_valid_cell(new_pos, true): return grid_pos
 	return new_pos
 
 func add_player_to(grid_pos:Vector2i, p:Player) -> void:
-	if not is_valid_cell(grid_pos): return
+	if GConfig.disabled_cells_kill_you and get_cell_at(grid_pos).disabled:
+		GDict.emit_signal("game_over", false)
+		
 	get_cell_at(grid_pos).add_player(p)
 
 func remove_player_from(grid_pos:Vector2i, p:Player) -> void:
-	if not is_valid_cell(grid_pos): return
 	get_cell_at(grid_pos).remove_player(p)
 
 func get_bounds() -> Rect2:
+	var cs = GConfig.cell_size
 	return Rect2(
-		-0.5 * Vector2(CELL_SIZE, CELL_SIZE),
-		size * CELL_SIZE
+		-0.5 * Vector2(cs, cs),
+		size * cs
 	)
+
+func on_map_shuffle_requested():
+	# @TODO: add any other types I might add later to this list of shufflable tiles
+	var machine_cells : Array[Cell] = query_cells({ "machine": ["recipe_book", "garbage_bin"] })
+	var allowed_cells : Array[Cell] = query_cells({ "shadow": false, "empty": true, "num": machine_cells.size() })
+	
+	for cell in machine_cells:
+		if allowed_cells.size() <= 0: break
+		
+		var type = cell.get_machine_type()
+		cell.remove_machine()
+		
+		var new_cell : Cell = allowed_cells.pop_back()
+		new_cell.add_machine(type)
 
 func query_cells(params:Dictionary) -> Array[Cell]:
 	var list : Array[Cell] = []
@@ -177,7 +197,10 @@ func query_cells(params:Dictionary) -> Array[Cell]:
 			suitable = (params.empty == cell.is_empty()) and suitable
 		
 		if "machine" in params:
-			suitable = (params.machine == cell.get_machine_type()) and suitable
+			var any_match = (params.machine == "any" and cell.get_machine_type())
+			if not params.machine is Array: params.machine = [params.machine]
+			var key_match = params.machine.has(cell.get_machine_type())
+			suitable = (key_match or any_match) and suitable
 		
 		if not suitable: continue
 		list.append(cell)
