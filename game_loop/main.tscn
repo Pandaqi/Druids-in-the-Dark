@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://h73dtaf2hvjv"]
+[gd_scene load_steps=18 format=3 uid="uid://h73dtaf2hvjv"]
 
 [ext_resource type="Script" path="res://map/map.gd" id="1_ece51"]
 [ext_resource type="Script" path="res://main/main.gd" id="1_kh0sr"]
@@ -9,11 +9,150 @@
 [ext_resource type="Script" path="res://map/shadows.gd" id="7_5p1vu"]
 [ext_resource type="Script" path="res://main/progression.gd" id="8_lignf"]
 [ext_resource type="Script" path="res://main/camera.gd" id="9_ti44r"]
+[ext_resource type="Script" path="res://main/progression/potion_order_balancer.gd" id="10_1bwyr"]
+[ext_resource type="Script" path="res://main/progression/dynamic_cell_spawner.gd" id="11_672sa"]
+[ext_resource type="Script" path="res://tutorial/tutorial.gd" id="12_prlpa"]
+[ext_resource type="Texture2D" uid="uid://bdotp6kytn80x" path="res://icon.svg" id="12_uogpg"]
+[ext_resource type="Script" path="res://tutorial/countdown.gd" id="12_yykam"]
+
+[sub_resource type="Animation" id="Animation_pqee2"]
+resource_name = "tutorial_popup"
+length = 0.7
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Control:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.133333, 0.233333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(1e-05, 1e-05), Vector2(1.2, 1.2), Vector2(1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Control/MarginContainer/MarginContainer/HBoxContainer/TutorialImageLeft:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.233333, 0.433333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Control/MarginContainer/MarginContainer/HBoxContainer/TutorialImageRight:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.466667, 0.666667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Control/MarginContainer/MarginContainer/HBoxContainer/VBoxContainer/TutorialText:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0.366667, 0.566667),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Control:rotation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.166667, 0.233333, 0.266667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, -0.0523599, 0.0349066, -0.0174533, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_bgei2"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Control:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1e-05, 1e-05)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Control/MarginContainer/MarginContainer/HBoxContainer/TutorialImageLeft:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Control/MarginContainer/MarginContainer/HBoxContainer/TutorialImageRight:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Control/MarginContainer/MarginContainer/HBoxContainer/VBoxContainer/TutorialText:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Control:rotation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mpqbm"]
+_data = {
+"RESET": SubResource("Animation_bgei2"),
+"tutorial_popup": SubResource("Animation_pqee2")
+}
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_kh0sr")
 
 [node name="Camera2D" type="Camera2D" parent="."]
+process_mode = 3
 script = ExtResource("9_ti44r")
 
 [node name="Map" type="Node2D" parent="."]
@@ -33,5 +172,125 @@ script = ExtResource("6_mabfd")
 [node name="Progression" type="Node" parent="."]
 script = ExtResource("8_lignf")
 
-[node name="Timer" type="Timer" parent="Progression"]
+[node name="PotionOrderBalancer" type="Node" parent="Progression"]
+script = ExtResource("10_1bwyr")
+
+[node name="Timer" type="Timer" parent="Progression/PotionOrderBalancer"]
 wait_time = 5.0
+
+[node name="DynamicCellSpawner" type="Node" parent="Progression"]
+script = ExtResource("11_672sa")
+
+[node name="Timer" type="Timer" parent="Progression/DynamicCellSpawner"]
+
+[node name="Countdown" type="CanvasLayer" parent="."]
+process_mode = 3
+script = ExtResource("12_yykam")
+
+[node name="Control" type="Control" parent="Countdown"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CenterContainer" type="CenterContainer" parent="Countdown/Control"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -36.5
+offset_top = -87.5
+offset_right = 36.5
+offset_bottom = 87.5
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(40.445, 96)
+
+[node name="Label" type="Label" parent="Countdown/Control/CenterContainer"]
+layout_mode = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 24
+theme_override_font_sizes/font_size = 128
+text = "1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Tutorial" type="CanvasLayer" parent="."]
+process_mode = 3
+script = ExtResource("12_prlpa")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Tutorial"]
+libraries = {
+"": SubResource("AnimationLibrary_mpqbm")
+}
+
+[node name="Control" type="Control" parent="Tutorial"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1e-05, 1e-05)
+pivot_offset = Vector2(575, 600)
+
+[node name="MarginContainer" type="MarginContainer" parent="Tutorial/Control"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="NinePatchRect" type="NinePatchRect" parent="Tutorial/Control/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("12_uogpg")
+patch_margin_left = 5
+patch_margin_top = 5
+patch_margin_right = 5
+patch_margin_bottom = 5
+
+[node name="MarginContainer" type="MarginContainer" parent="Tutorial/Control/MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 12
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 12
+theme_override_constants/margin_bottom = 12
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Tutorial/Control/MarginContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="TutorialImageLeft" type="TextureRect" parent="Tutorial/Control/MarginContainer/MarginContainer/HBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+texture = ExtResource("12_uogpg")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Tutorial/Control/MarginContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+alignment = 1
+
+[node name="TutorialText" type="RichTextLabel" parent="Tutorial/Control/MarginContainer/MarginContainer/HBoxContainer/VBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/normal_font_size = 24
+bbcode_enabled = true
+text = "[center]Pick up and deliver ingredients to where needed. (If you try to give the wrong thing, your inventory empties.)
+Also, don't walk into holes![/center]"
+fit_content = true
+scroll_active = false
+
+[node name="TutorialImageRight" type="TextureRect" parent="Tutorial/Control/MarginContainer/MarginContainer/HBoxContainer"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 2
+texture = ExtResource("12_uogpg")

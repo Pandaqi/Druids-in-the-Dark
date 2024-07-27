@@ -1,4 +1,4 @@
-extends Node2D
+class_name InventoryItem extends Node2D
 
 @onready var sprite : Sprite2D = $Sprite2D
 @onready var label : Label = $Label

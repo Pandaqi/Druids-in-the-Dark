@@ -8,7 +8,7 @@ var item_nodes : Array[Node2D] = []
 @export var max_size : int = -1
 
 func _ready():
-	if max_size != -1: max_size = GConfig.inventory_max_size
+	if max_size < 0: max_size = GConfig.inventory_max_size
 	set_scale(GConfig.inventory_scale*Vector2.ONE)
 
 func activate():
@@ -45,6 +45,7 @@ func visualize():
 	
 	# determine list of things based on display type
 	var list : Array[String] = items.duplicate(false)
+	
 	var list_freq : Array[int] = []
 	if group_by_type:
 		list = []
@@ -69,10 +70,10 @@ func visualize():
 	var cur_pos = offset_all_items
 	for i in range(item_nodes.size()):
 		var node = item_nodes[i]
-		var has_content = i < num_items
-		node.set_visible(has_content)
+		var item_has_content = i < num_items
+		node.set_visible(item_has_content)
 		
-		if has_content:
+		if item_has_content:
 			var data = GDict.get_element_data(list[i])
 			node.set_frame(data.frame)
 			if group_by_type:

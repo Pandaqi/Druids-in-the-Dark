@@ -1,7 +1,7 @@
 class_name ModuleShadowTimeTracker extends Node
 
 @export var cell : Cell
-@onready var timer : Timer
+@onready var timer : Timer = $Timer
 var time_in_shadow : float = 0.0
 var last_time_change : float = 0.0
 

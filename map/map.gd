@@ -95,14 +95,25 @@ func assign_order_cells(prog:Progression):
 
 # @TODO: you'll probably unlock more machines as you get further, which is when this should turn into a LOOP of "pick cell, set type"
 func assign_machines():
-	var valid_cells := query_cells({ "edge": false, "empty": true, "num": 2 })
+	var num_machines_needed := 0
+	var freq_scalar = GConfig.machine_frequency_scalar[GInput.get_player_count()]
+	var freq_dict:Dictionary = {}
+	for elem in GConfig.machines_included:
+		var freq_bounds = GDict.MACHINES[elem].freq.duplicate(true)
+		freq_bounds.min *= freq_scalar
+		freq_bounds.max *= freq_scalar
+		
+		var freq = round(randf_range(freq_bounds.min, freq_bounds.max))
+		freq_dict[elem] = freq
+		num_machines_needed += freq
 	
-	var recipe_book = valid_cells.pop_back()
-	recipe_book.add_machine("recipe_book")
+	var valid_cells := query_cells({ "edge": false, "empty": true, "num": num_machines_needed })
 	
-	var garbage = valid_cells.pop_back()
-	garbage.add_machine("garbage_bin")
-
+	for elem in freq_dict:
+		for _i in range(freq_dict[elem]):
+			var cell = valid_cells.pop_back()
+			cell.add_machine(elem)
+	
 func visualize_grid():
 	for cell in grid:
 		cell.visualize()
@@ -187,6 +198,9 @@ func query_cells(params:Dictionary) -> Array[Cell]:
 		
 		var suitable = true
 		
+		if "exclude" in params:
+			suitable = (not params.exclude.has(cell)) and suitable
+		
 		if "edge" in params:
 			suitable = (params.edge == cell.is_edge(size)) and suitable
 		
@@ -197,8 +211,8 @@ func query_cells(params:Dictionary) -> Array[Cell]:
 			suitable = (params.empty == cell.is_empty()) and suitable
 		
 		if "machine" in params:
-			var any_match = (params.machine == "any" and cell.get_machine_type())
 			if not params.machine is Array: params.machine = [params.machine]
+			var any_match = (params.machine[0] == "any" and cell.get_machine_type())
 			var key_match = params.machine.has(cell.get_machine_type())
 			suitable = (key_match or any_match) and suitable
 		

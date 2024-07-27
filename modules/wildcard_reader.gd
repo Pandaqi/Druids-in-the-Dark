@@ -1,4 +1,4 @@
-class_name ModuleRecipeReader extends Node
+class_name ModuleWildcardReader extends Node
 
 var recipes : Recipes
 var effects_tracker : ModuleEffectsTracker
@@ -9,17 +9,9 @@ func activate(recipes:Recipes, grid_mover:ModuleGridMover, effects_tracker:Modul
 	grid_mover.cell_entered.connect(on_cell_entered)
 
 func on_cell_entered(cell:Cell):
-	# no recipe book here
-	var machine = cell.get_machine_type()
-	if machine != "recipe_book": return
+	if cell.get_machine_type() != "wildcard": return
 	
 	# if interaction is disabled, abort
 	if GConfig.delivered_components_create_effects and effects_tracker.non_interact: return
 	
-	if GConfig.recipe_book_visit_changes_recipes:
-		recipes.generate()
-	
-	# @TODO: perhaps change in different dirs (+1/-1) based on "last movement direction" saved on grid_mover?
-	cell.machine.change_index(+1, recipes)
-	
-	
+	cell.machine.regenerate(recipes)

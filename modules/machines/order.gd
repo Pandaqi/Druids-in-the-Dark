@@ -24,29 +24,31 @@ func is_occupied() -> bool:
 	return inventory.has_content()
 
 func start_timer():
-	var order_dur_scalar = GConfig.order_duration_scalar[GInput.get_player_count()]
-	timer.wait_time = randf_range(GConfig.def_order_duration.min, GConfig.def_order_duration.max) * order_dur_scalar
-	timer.timeout.connect(on_timer_timeout)
-	timer.start()
+	if GConfig.orders_are_timed:
+		var order_dur_scalar = GConfig.order_duration_scalar[GInput.get_player_count()]
+		timer.wait_time = randf_range(GConfig.def_order_duration.min, GConfig.def_order_duration.max) * order_dur_scalar
+		timer.timeout.connect(on_timer_timeout)
+		timer.start()
 	
 	tween_occupied = get_tree().create_tween()
 	var dur = 0.75
-	tween_occupied.tween_property(cell_element, "modulate:a", 0, dur)
-	tween_occupied.tween_property(cell_element, "modulate:a", 1, dur)
+	tween_occupied.tween_property(cell_element, "scale", 0.7*Vector2.ONE, dur)
+	tween_occupied.tween_property(cell_element, "scale", 1.0*Vector2.ONE, dur)
 	tween_occupied.set_loops(1000)
 
 func change_timer(dt:float):
+	if not GConfig.orders_are_timed: return
+	
 	var new_time_left = timer.time_left + dt
 	timer.stop()
 	timer.start(new_time_left)
 
 func _physics_process(dt:float) -> void:
-	if is_occupied():
+	if is_occupied() and GConfig.orders_are_timed:
 		var timer_left = timer.time_left / timer.wait_time
 		cell.floor_sprite.set_scale(timer_left * Vector2.ONE)
 
 func finish():
-	print("SHOULD FINISH ORDER")
 	tween_occupied.kill()
 	inventory.clear()
 	remove_from_group("Customers")
@@ -63,7 +65,7 @@ func on_visit(is_match:bool, visitor_inventory:ModuleInventory):
 		inventory.set_visible(true)
 	
 	if GConfig.customer_visit_delays_timer and not is_match:
-		var avg_timer : float = (GConfig.def_order_duration.min + GConfig.dev_order_duration.max)
+		var avg_timer : float = (GConfig.def_order_duration.min + GConfig.def_order_duration.max)
 		var delay = 0.5 * avg_timer * GConfig.customer_timer_delay_scalar
 		cell.machine.change_timer(delay)
 	

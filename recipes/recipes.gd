@@ -2,10 +2,12 @@ class_name Recipes extends Node
 
 var dict:Dictionary = {}
 var progression:Progression
+var wildcard:String = ""
 
 func activate(progression:Progression):
 	self.progression = progression
 	generate()
+	generate_wildcard()
 
 func generate():
 	var potions := progression.get_available_potions()
@@ -34,11 +36,24 @@ func generate():
 	
 	print(dict)
 
+func generate_wildcard():
+	if not GConfig.wildcard_include: return
+	
+	var components := progression.get_available_elements()
+	components.erase(wildcard) # don't allow re-picking the current one; has to CHANGE
+	wildcard = components.pick_random()
+
 func regenerate_potion(potion:String):
 	var cur_length = dict[potion].size()
 	var new_elems = progression.get_available_elements()
 	new_elems.shuffle()
 	dict[potion] = new_elems.slice(0, cur_length)
+
+func is_wildcard(comp:String) -> bool:
+	return wildcard == comp
+
+func has_wildcard() -> bool:
+	return wildcard != ""
 
 func get_components_for(potion:String) -> Array[String]:
 	var arr : Array[String] = []

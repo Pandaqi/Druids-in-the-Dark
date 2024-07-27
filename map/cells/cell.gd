@@ -55,6 +55,10 @@ func remove_player(p:Player) -> bool:
 func get_element() -> CellElement:
 	return element
 
+func get_element_type() -> String:
+	if not get_element(): return ""
+	return get_element().type
+
 func add_element(e:String) -> void:
 	var node = element_scene.instantiate()
 	add_child(node)
@@ -64,7 +68,9 @@ func add_element(e:String) -> void:
 	shadow_time_tracker.reset()
 	
 	node.set_scale(1.1*Vector2.ONE)
-	get_tree().create_tween().tween_property(node, "scale", Vector2.ONE, 0.15)
+	var tw = get_tree().create_tween()
+	tw.tween_property(node, "scale", Vector2.ONE, 0.15)
+	tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 
 func remove_element() -> void:
 	element.queue_free()
@@ -88,9 +94,11 @@ func add_machine(type:String) -> void:
 	machine_node = node
 	
 	node.set_scale(1.1*Vector2.ONE)
-	get_tree().create_tween().tween_property(node, "scale", Vector2.ONE, 0.15)
+	var tw = get_tree().create_tween()
+	tw.tween_property(node, "scale", Vector2.ONE, 0.15)
+	tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	
-	var module_scene = GDict.MACHINES[type].module_scene
+	var module_scene = load(GDict.MACHINES[type].module_scene)
 	if module_scene:
 		var mod = module_scene.instantiate()
 		node.add_child(mod)
@@ -123,9 +131,20 @@ func set_shadow(val:bool) -> void:
 	
 	var tween_dur = 0.1
 	
+	if GConfig.disabled_cells_kill_you:
+		floor_sprite.modulate.a = start_alpha
+		var tw = get_tree().create_tween()
+		tw.tween_property(floor_sprite, "modulate:a", end_alpha, tween_dur)
+		tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	
 	if element: 
 		element.modulate.a = start_alpha
-		get_tree().create_tween().tween_property(element, "modulate:a", end_alpha, tween_dur)
+		var tw = get_tree().create_tween()
+		tw.tween_property(element, "modulate:a", end_alpha, tween_dur)
+		tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	
 	if machine_type: 
 		machine_node.modulate.a = start_alpha
-		get_tree().create_tween().tween_property(machine_node, "modulate:a", end_alpha, tween_dur)
+		var tw = get_tree().create_tween()
+		tw.tween_property(machine_node, "modulate:a", end_alpha, tween_dur)
+		tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)

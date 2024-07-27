@@ -1,12 +1,18 @@
 class_name ModulePlayerInteractor extends Node
 
-func activate(grid_mover:ModuleGridMover):
+var effects_tracker : ModuleEffectsTracker
+
+func activate(grid_mover:ModuleGridMover, effects_tracker:ModuleEffectsTracker):
+	self.effects_tracker = effects_tracker
 	grid_mover.cell_entered.connect(on_cell_entered)
 
 func on_cell_entered(cell:Cell):
 	# if we're alone, nothing to interact with
 	var players_here : Array[Player] = cell.get_players()
 	if players_here.size() <= 1: return
+	
+	# if interaction is disabled, abort
+	if GConfig.delivered_components_create_effects and effects_tracker.non_interact: return
 	
 	# figure out who should get all the elements
 	var best_player : Player = null

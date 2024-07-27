@@ -9,17 +9,21 @@ var busy : bool = false
 signal position_updated()
 signal cell_entered()
 
-func activate(map:Map, input:ModuleInput):
+func activate(map:Map, input:ModuleInput) -> void:
 	self.map = map
 	input.movement_vector_update.connect(move)
 
-func update_position(new_pos:Vector2i):
+func update_position(new_pos:Vector2i, instant:bool = false) -> void:
 	map.remove_player_from(grid_pos, entity)
 	grid_pos = new_pos
-	emit_signal("position_updated", map.grid_pos_to_real_pos(grid_pos))
-	busy = true
+	busy = true # @NOTE: must come before this signal, in case instant is true
+	emit_signal("position_updated", map.grid_pos_to_real_pos(grid_pos), instant)
 
-func move(vec:Vector2i):
+func teleport(new_pos:Vector2i) -> void:
+	if busy: return
+	update_position(new_pos)
+
+func move(vec:Vector2i) -> void:
 	if vec.length() <= 0.03: return
 	if busy: return
 	
@@ -29,7 +33,7 @@ func move(vec:Vector2i):
 	
 	update_position(new_pos)
 
-func on_movement_done():
+func on_movement_done() -> void:
 	map.add_player_to(grid_pos, entity)
 	busy = false
 	emit_signal("cell_entered", map.get_cell_at(grid_pos))

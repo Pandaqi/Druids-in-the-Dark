@@ -3,6 +3,8 @@ class_name ModuleOrderGiver extends Node
 var inventory : ModuleInventory
 var recipes : Recipes
 
+signal order_delivered(order:Array[String])
+
 func activate(grid_mover:ModuleGridMover, recipes:Recipes, inventory:ModuleInventory):
 	self.inventory = inventory
 	self.recipes = recipes
@@ -31,15 +33,37 @@ func on_cell_entered(cell:Cell):
 	
 	# check if we match EXACTLY
 	var our_components : Array[String] = inventory.get_content()
-	var missing_components : int = 0
-	for comp in needed_components:
-		if not our_components.has(comp): missing_components += 1
-		our_components.erase(comp)
+
+	# first handle raw matches
+	for i in range(needed_components.size()-1,-1,-1):
+		var comp = needed_components[i]
+		if our_components.has(comp): 
+			needed_components.remove_at(i)
+			our_components.erase(comp)
 	
-	var is_match = our_components.size() <= 0 and missing_components <= 0
+	# for every non-wildcard ingredient REQUESTED, use a wildcard of ours
+	if recipes.has_wildcard():
+		for i in range(needed_components.size()-1,-1,-1):
+			var comp = needed_components[i]
+			if not recipes.is_wildcard(comp):
+				if our_components.has(recipes.wildcard):
+					needed_components.remove_at(i)
+					our_components.erase(recipes.wildcard)
+				else:
+					break
+		
+		# for every wildcard ingredient REQUESTED, use any component of ours
+		for i in range(needed_components.size()-1,-1,-1):
+			var comp = needed_components[i]
+			if recipes.is_wildcard(comp):
+				our_components.pop_back()
+				needed_components.remove_at(i)
+	
+	var is_match = our_components.size() <= 0 and needed_components.size() <= 0
 	cell.machine.on_visit(is_match, inventory)
-	if not is_match: 
-		return
+	if not is_match: return
+	
+	emit_signal("order_delivered", inventory.get_content())
 	
 	inventory.clear()
 	cell.remove_machine()
