@@ -1,12 +1,12 @@
 extends Camera2D
 
-const MOVE_SPEED := 7.0
-const ZOOM_SPEED := 4.0
+const MOVE_SPEED := 8.0
+const ZOOM_SPEED := 8.0
 
 var map:Map
 
-func activate(map:Map):
-	self.map = map
+func activate(m:Map):
+	self.map = m
 
 func _process(dt:float):
 	fit_bounds_in_view(dt)

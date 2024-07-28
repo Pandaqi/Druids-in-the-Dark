@@ -5,9 +5,9 @@ var players : Players
 var shadowed_cells : Array[Cell]
 var global_shadow := false
 
-func activate(map:Map, players:Players):
-	self.players = players
-	self.map = map
+func activate(m:Map, p:Players):
+	self.players = p
+	self.map = m
 
 func on_player_moved(_new_cell:Cell = null):
 	if not players: return
@@ -21,7 +21,7 @@ func on_player_moved(_new_cell:Cell = null):
 		
 		for p in player_nodes:
 			var in_range_of_player = false
-			var range_squared = pow(p.player_shadow.range, 2)
+			var range_squared = pow(p.player_shadow.get_range(), 2)
 			var dist_squared = p.grid_mover.grid_pos.distance_squared_to(cell.pos)
 			if dist_squared <= range_squared:
 				in_range_of_player = true
@@ -43,5 +43,5 @@ func on_player_moved(_new_cell:Cell = null):
 
 func set_global_shadow(val:bool) -> void:
 	global_shadow = val
-	GDict.emit_signal("toggle_shadows_globally", global_shadow)
+	GDict.toggle_shadows_globally.emit(global_shadow)
 	on_player_moved()

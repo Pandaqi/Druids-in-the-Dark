@@ -5,21 +5,39 @@ const NB_OFFSETS = [Vector2i.RIGHT, Vector2i.DOWN, Vector2i.LEFT, Vector2i.UP]
 # we use a 1D array because GDScript doesn't support typed multidimensional arrays :/
 var grid : Array[Cell] = []
 var size : Vector2i = Vector2i(8,6)
+var progression : Progression
+var players : Players
 @export var cell_scene : PackedScene
 
-func activate(prog:Progression) -> void:
+func activate(prog:Progression, p:Players) -> void:
+	self.progression = prog
+	self.players = p
 	GDict.map_shuffle.connect(on_map_shuffle_requested)
-	var raw_size : Vector2 = (Vector2(GConfig.def_map_size) * GConfig.map_size_scalar[GInput.get_player_count()])
+
+func regenerate() -> void:
+	# delete old
+	for cell in grid:
+		cell.queue_free()
+	
+	# determine proper size
+	var raw_size : Vector2 = Vector2(GConfig.def_map_size)
+	raw_size *= GConfig.map_size_scalar[GInput.get_player_count()]
+	
+	var progression_growth = clamp(pow(GConfig.map_size_growth_per_level, progression.level), 1.0, GConfig.map_size_growth_max)
+	raw_size *= progression_growth
+	
 	size = raw_size.round()
 	
-	generate(prog)
-
-func generate(prog:Progression) -> void:
+	# do the whole dance
 	create_grid()
 	cut_holes_in_grid()
-	assign_order_cells(prog)
+	assign_order_cells()
 	assign_machines()
+	assign_planter_cells()
 	visualize_grid()
+	
+	# now tell players where they can stand
+	players.reset()
 
 func create_grid():
 	grid = []
@@ -36,11 +54,13 @@ func create_grid():
 			add_child(c)
 
 func cut_holes_in_grid():
-	var num_holes : int = round( 0.5*sqrt(size.x * size.y) )
-	var max_size : int = round( 0.33 * min(size.x, size.y) )
+	var num_holes : int = round( 0.66 * sqrt(size.x * size.y) )
+	var max_size : int = round( 0.35 * min(size.x, size.y) )
+	var holes_created := 0
 	
-	for i in range(num_holes):
+	while holes_created < num_holes:
 		var hole_size := Vector2i(randi_range(1,max_size), randi_range(1,max_size))
+		
 		var anchor := get_random_position()
 		
 		var cells_disabled : Array[Cell] = []
@@ -50,13 +70,22 @@ func cut_holes_in_grid():
 				if out_of_bounds(cur_pos): continue
 				
 				var cur_cell := get_cell_at(cur_pos)
+				if cur_cell.disabled: continue
+				
 				cells_disabled.append(cur_cell)
 				cur_cell.disabled = true
+		
+		var barely_changed_anything = cells_disabled.size() <= 0
+		if barely_changed_anything:
+			continue
 		
 		var map_still_connected := is_map_fully_connected()
 		if not map_still_connected:
 			for cell in cells_disabled:
 				cell.disabled = false
+			continue
+		
+		holes_created += 1
 
 func is_map_fully_connected() -> bool:
 	var num_enabled_cells = 0
@@ -87,14 +116,23 @@ func get_neighbors_of(cell:Cell) -> Array[Cell]:
 		arr.append(get_cell_at(new_pos))
 	return arr
 
-func assign_order_cells(prog:Progression):
-	var num_needed := prog.get_num_customers()
+func assign_order_cells() -> void:
+	var num_needed := progression.get_num_customers()
 	var edge_cells := query_cells({ "edge": true, "num": num_needed })
 	for cell in edge_cells:
 		cell.add_machine("order")
 
-# @TODO: you'll probably unlock more machines as you get further, which is when this should turn into a LOOP of "pick cell, set type"
-func assign_machines():
+func assign_planter_cells() -> void:
+	var num_needed := progression.planter_cells.size()
+	if num_needed <= 0: return
+	
+	var valid_cells := query_cells({ "empty": true, "num": num_needed })
+	for i in range(valid_cells.size()):
+		var cell := valid_cells[i]
+		cell.add_machine("planter")
+		cell.machine.set_type(progression.planter_cells[i])
+
+func assign_machines() -> void:
 	var num_machines_needed := 0
 	var freq_scalar = GConfig.machine_frequency_scalar[GInput.get_player_count()]
 	var freq_dict:Dictionary = {}
@@ -114,7 +152,7 @@ func assign_machines():
 			var cell = valid_cells.pop_back()
 			cell.add_machine(elem)
 	
-func visualize_grid():
+func visualize_grid() -> void:
 	for cell in grid:
 		cell.visualize()
 
@@ -125,7 +163,7 @@ func pos_to_grid_id(pos:Vector2i) -> int:
 	return pos.x + pos.y * size.x
 
 func grid_id_to_pos(id:int) -> Vector2i:
-	return Vector2i(id % size.x, floor(id / size.x))
+	return Vector2i(id % size.x, floor(id / float(size.x)))
 
 func grid_pos_to_real_pos(grid_pos:Vector2i) -> Vector2:
 	return GConfig.cell_size * Vector2(grid_pos)
@@ -155,7 +193,7 @@ func get_pos_after_move(grid_pos:Vector2i, vec:Vector2i) -> Vector2i:
 
 func add_player_to(grid_pos:Vector2i, p:Player) -> void:
 	if GConfig.disabled_cells_kill_you and get_cell_at(grid_pos).disabled:
-		GDict.emit_signal("game_over", false)
+		GDict.game_over.emit(false)
 		
 	get_cell_at(grid_pos).add_player(p)
 
@@ -170,8 +208,7 @@ func get_bounds() -> Rect2:
 	)
 
 func on_map_shuffle_requested():
-	# @TODO: add any other types I might add later to this list of shufflable tiles
-	var machine_cells : Array[Cell] = query_cells({ "machine": ["recipe_book", "garbage_bin"] })
+	var machine_cells : Array[Cell] = query_cells({ "machine": ["recipe_book", "garbage_bin", "wildcard", "spikes", "planter"] })
 	var allowed_cells : Array[Cell] = query_cells({ "shadow": false, "empty": true, "num": machine_cells.size() })
 	
 	for cell in machine_cells:
@@ -188,7 +225,6 @@ func query_cells(params:Dictionary) -> Array[Cell]:
 	
 	var all_cells := grid
 	
-	# @TODO: test if it's actually faster to ask only for a fixed num if we don't need a lot
 	if "num" in params: 
 		all_cells = grid.duplicate(false)
 		all_cells.shuffle()
@@ -222,3 +258,20 @@ func query_cells(params:Dictionary) -> Array[Cell]:
 		if "num" in params and list.size() >= params.num: break
 	
 	return list
+
+func _on_progression_new_level() -> void:
+	regenerate()
+
+func count_empty_cells() -> int:
+	var num := 0
+	for cell in grid:
+		if not cell.is_empty(): continue
+		num += 1
+	return num
+
+func count_total_cells() -> int:
+	return grid.size()
+
+func is_full() -> bool:
+	return count_empty_cells() / float(count_total_cells()) <= GConfig.map_percentage_required_empty
+	

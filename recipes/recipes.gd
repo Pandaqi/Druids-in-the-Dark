@@ -4,8 +4,10 @@ var dict:Dictionary = {}
 var progression:Progression
 var wildcard:String = ""
 
-func activate(progression:Progression):
-	self.progression = progression
+func activate(prog:Progression):
+	self.progression = prog
+
+func regenerate():
 	generate()
 	generate_wildcard()
 
@@ -35,6 +37,7 @@ func generate():
 		dict[potions[i]] = combo
 	
 	print(dict)
+	GConfig.recipes_available = dict
 
 func generate_wildcard():
 	if not GConfig.wildcard_include: return
@@ -67,3 +70,15 @@ func count() -> int:
 func on_order_delivered():
 	progression.check_game_over()
 	# @TODO: some bonus/reward?
+
+func _on_progression_new_level() -> void:
+	regenerate()
+
+func select_potion_that_includes(potions:Array[String], comp:String) -> String:
+	var suitable_potions : Array[String] = []
+	for potion in potions:
+		var comps = get_components_for(potion)
+		if not comps.has(comp): continue
+		suitable_potions.append(potion)
+	if suitable_potions.size() <= 0: return potions.back()
+	return suitable_potions.pick_random()

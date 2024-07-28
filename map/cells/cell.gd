@@ -38,6 +38,9 @@ func get_players():
 func count_players() -> int:
 	return players.size()
 
+func has_players() -> bool:
+	return count_players() > 0
+
 func has_player(p:Player) -> bool:
 	return players.has(p)
 
@@ -111,7 +114,7 @@ func remove_machine() -> void:
 	machine = null
 
 func is_empty() -> bool:
-	return not get_element() and count_players() <= 0 and get_machine_type() == ""
+	return (not get_element()) and count_players() <= 0 and get_machine_type() == ""
 
 func is_edge(grid_size:Vector2i) -> bool:
 	return pos.x <= 0 || pos.y <= 0 || pos.x >= (grid_size.x-1) || pos.y >= (grid_size.y-1)
@@ -121,7 +124,7 @@ func set_shadow(val:bool) -> void:
 	if not changed: return
 	
 	shadow = val
-	emit_signal("shadow_changed", val)
+	shadow_changed.emit(val)
 	
 	var start_alpha := 0.0
 	var end_alpha := 1.0

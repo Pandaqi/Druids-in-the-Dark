@@ -1,6 +1,5 @@
-[gd_scene load_steps=19 format=3 uid="uid://doo8wo6x48f0n"]
+[gd_scene load_steps=18 format=3 uid="uid://doo8wo6x48f0n"]
 
-[ext_resource type="Texture2D" uid="uid://bdotp6kytn80x" path="res://icon.svg" id="1_arys7"]
 [ext_resource type="Script" path="res://modules/visuals.gd" id="1_fbtq4"]
 [ext_resource type="Script" path="res://players/player/player.gd" id="1_q6yen"]
 [ext_resource type="Script" path="res://modules/input.gd" id="2_allid"]
@@ -35,9 +34,12 @@ vframes = 2
 script = ExtResource("1_fbtq4")
 
 [node name="Sprite2D" type="Sprite2D" parent="Visuals"]
-modulate = Color(0.688864, 0.417787, 0.985605, 1)
-scale = Vector2(0.5, 0.5)
-texture = ExtResource("1_arys7")
+modulate = Color(1, 1, 1, 0.784314)
+scale = Vector2(0.33, 0.33)
+texture = ExtResource("14_8f2d5")
+hframes = 4
+vframes = 2
+frame = 4
 
 [node name="Inventory" type="Node2D" parent="."]
 script = ExtResource("9_u3cna")

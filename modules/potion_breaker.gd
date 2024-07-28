@@ -3,9 +3,9 @@ class_name ModulePotionBreaker extends Node
 var map : Map
 var recipes : Recipes
 
-func activate(map:Map, recipes:Recipes, grid_mover:ModuleGridMover):
-	self.map = map
-	self.recipes = recipes
+func activate(m:Map, r:Recipes, grid_mover:ModuleGridMover):
+	self.map = m
+	self.recipes = r
 	grid_mover.cell_entered.connect(on_cell_entered)
 
 func on_cell_entered(cell:Cell):

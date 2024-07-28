@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://h73dtaf2hvjv"]
+[gd_scene load_steps=27 format=3 uid="uid://h73dtaf2hvjv"]
 
 [ext_resource type="Script" path="res://map/map.gd" id="1_ece51"]
 [ext_resource type="Script" path="res://main/main.gd" id="1_kh0sr"]
@@ -14,6 +14,75 @@
 [ext_resource type="Script" path="res://tutorial/tutorial.gd" id="12_prlpa"]
 [ext_resource type="Texture2D" uid="uid://bdotp6kytn80x" path="res://icon.svg" id="12_uogpg"]
 [ext_resource type="Script" path="res://tutorial/countdown.gd" id="12_yykam"]
+[ext_resource type="Script" path="res://main/game_over.gd" id="15_f10ch"]
+[ext_resource type="FontFile" uid="uid://dtf04jykdlyhg" path="res://ui/fonts/body_regular.ttf" id="16_s4q65"]
+[ext_resource type="Theme" uid="uid://c0bfo1n4w7tgt" path="res://ui/default_theme.tres" id="16_ugln2"]
+[ext_resource type="FontFile" uid="uid://djjeqfetr54ar" path="res://ui/fonts/heading.TTF" id="17_wkjik"]
+[ext_resource type="FontFile" uid="uid://battax6vsqqxm" path="res://ui/fonts/body_bold.ttf" id="18_amqjc"]
+[ext_resource type="Texture2D" uid="uid://belshgxot58hl" path="res://ui/nine_patch_atlas.tres" id="20_igie5"]
+
+[sub_resource type="Animation" id="Animation_bgei2"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Control:scale")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1e-05, 1e-05)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Control/MarginContainer/MarginContainer/HBoxContainer/TutorialImageLeft:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Control/MarginContainer/MarginContainer/HBoxContainer/TutorialImageRight:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Control/MarginContainer/MarginContainer/HBoxContainer/VBoxContainer/TutorialText:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Control:rotation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
 
 [sub_resource type="Animation" id="Animation_pqee2"]
 resource_name = "tutorial_popup"
@@ -79,73 +148,47 @@ tracks/4/keys = {
 "values": [0.0, -0.0523599, 0.0349066, -0.0174533, 0.0]
 }
 
-[sub_resource type="Animation" id="Animation_bgei2"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mpqbm"]
+_data = {
+"RESET": SubResource("Animation_bgei2"),
+"tutorial_popup": SubResource("Animation_pqee2")
+}
+
+[sub_resource type="Animation" id="Animation_uk5tb"]
+resource_name = "go_appear"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Control:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_h1e8m"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
-tracks/0/path = NodePath("Control:scale")
+tracks/0/path = NodePath("Control:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(1e-05, 1e-05)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Control/MarginContainer/MarginContainer/HBoxContainer/TutorialImageLeft:modulate")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
 "values": [Color(1, 1, 1, 0)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Control/MarginContainer/MarginContainer/HBoxContainer/TutorialImageRight:modulate")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 1, 1, 0)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("Control/MarginContainer/MarginContainer/HBoxContainer/VBoxContainer/TutorialText:modulate")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Color(1, 1, 1, 0)]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("Control:rotation")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_mpqbm"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_h68r1"]
 _data = {
-"RESET": SubResource("Animation_bgei2"),
-"tutorial_popup": SubResource("Animation_pqee2")
+"RESET": SubResource("Animation_h1e8m"),
+"go_appear": SubResource("Animation_uk5tb")
 }
 
 [node name="Main" type="Node2D"]
@@ -212,8 +255,11 @@ pivot_offset = Vector2(40.445, 96)
 
 [node name="Label" type="Label" parent="Countdown/Control/CenterContainer"]
 layout_mode = 2
+theme = ExtResource("16_ugln2")
+theme_override_colors/font_color = Color(1, 0.832623, 0.994415, 1)
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 24
+theme_override_fonts/font = ExtResource("17_wkjik")
 theme_override_font_sizes/font_size = 128
 text = "1"
 horizontal_alignment = 1
@@ -253,21 +299,22 @@ theme_override_constants/margin_bottom = 24
 
 [node name="NinePatchRect" type="NinePatchRect" parent="Tutorial/Control/MarginContainer"]
 layout_mode = 2
-texture = ExtResource("12_uogpg")
-patch_margin_left = 5
-patch_margin_top = 5
-patch_margin_right = 5
-patch_margin_bottom = 5
+texture = ExtResource("20_igie5")
+patch_margin_left = 64
+patch_margin_top = 64
+patch_margin_right = 64
+patch_margin_bottom = 64
 
 [node name="MarginContainer" type="MarginContainer" parent="Tutorial/Control/MarginContainer"]
 layout_mode = 2
-theme_override_constants/margin_left = 12
-theme_override_constants/margin_top = 12
-theme_override_constants/margin_right = 12
-theme_override_constants/margin_bottom = 12
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 32
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Tutorial/Control/MarginContainer/MarginContainer"]
 layout_mode = 2
+theme_override_constants/separation = 24
 
 [node name="TutorialImageLeft" type="TextureRect" parent="Tutorial/Control/MarginContainer/MarginContainer/HBoxContainer"]
 modulate = Color(1, 1, 1, 0)
@@ -283,7 +330,12 @@ alignment = 1
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
+theme = ExtResource("16_ugln2")
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+theme_override_fonts/normal_font = ExtResource("16_s4q65")
+theme_override_fonts/bold_font = ExtResource("18_amqjc")
 theme_override_font_sizes/normal_font_size = 24
+theme_override_font_sizes/bold_font_size = 24
 bbcode_enabled = true
 text = "[center]Pick up and deliver ingredients to where needed. (If you try to give the wrong thing, your inventory empties.)
 Also, don't walk into holes![/center]"
@@ -294,3 +346,84 @@ scroll_active = false
 modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 texture = ExtResource("12_uogpg")
+
+[node name="GameOver" type="CanvasLayer" parent="."]
+process_mode = 3
+visible = false
+script = ExtResource("15_f10ch")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="GameOver"]
+libraries = {
+"": SubResource("AnimationLibrary_h68r1")
+}
+
+[node name="Control" type="Control" parent="GameOver"]
+modulate = Color(1, 1, 1, 0)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="GameOver/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.519)
+
+[node name="MarginContainer" type="MarginContainer" parent="GameOver/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_top = 42
+theme_override_constants/margin_right = 64
+theme_override_constants/margin_bottom = 42
+
+[node name="NinePatchRect" type="NinePatchRect" parent="GameOver/Control/MarginContainer"]
+layout_mode = 2
+texture = ExtResource("20_igie5")
+patch_margin_left = 64
+patch_margin_top = 64
+patch_margin_right = 64
+patch_margin_bottom = 64
+
+[node name="MarginContainer" type="MarginContainer" parent="GameOver/Control/MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 64
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 64
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameOver/Control/MarginContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Heading" type="Label" parent="GameOver/Control/MarginContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("16_ugln2")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("17_wkjik")
+theme_override_font_sizes/font_size = 92
+text = "Game Over"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Result" type="Label" parent="GameOver/Control/MarginContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme = ExtResource("16_ugln2")
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_font_sizes/font_size = 32
+text = "You managed to reach Level 2."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="new_level" from="Progression" to="Map" method="_on_progression_new_level"]
+[connection signal="new_level" from="Progression" to="Recipes" method="_on_progression_new_level"]

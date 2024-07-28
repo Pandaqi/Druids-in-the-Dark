@@ -3,10 +3,10 @@ class_name ModuleTeleporter extends Node
 var map : Map
 var grid_mover : ModuleGridMover
 
-func activate(grid_mover:ModuleGridMover, map:Map):
-	self.map = map
-	self.grid_mover = grid_mover
-	grid_mover.cell_entered.connect(on_cell_entered)
+func activate(gm:ModuleGridMover, m:Map):
+	self.map = m
+	self.grid_mover = gm
+	gm.cell_entered.connect(on_cell_entered)
 
 func on_cell_entered(cell:Cell):
 	if cell.get_machine_type() != "teleport": return

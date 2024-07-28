@@ -14,10 +14,11 @@ class_name Player extends Node2D
 @onready var player_shadow : ModulePlayerShadow = $PlayerShadow
 @onready var effects_tracker : ModuleEffectsTracker = $EffectsTracker
 @onready var teleporter : ModuleTeleporter = $Teleporter
+@onready var spike_killer : ModuleSpikeKiller = $SpikeKiller
 
 func activate(player_num:int, map:Map, recipes:Recipes):
 	input.activate(player_num)
-	visuals.activate(grid_mover, effects_tracker)
+	visuals.activate(player_num, grid_mover, effects_tracker)
 	grid_mover.activate(map, input)
 	inventory.activate()
 	
@@ -34,3 +35,4 @@ func activate(player_num:int, map:Map, recipes:Recipes):
 	effects_tracker.activate(order_giver)
 	
 	teleporter.activate(grid_mover, map)
+	spike_killer.activate(grid_mover)

@@ -5,9 +5,9 @@ var recipes : Recipes
 
 signal order_delivered(order:Array[String])
 
-func activate(grid_mover:ModuleGridMover, recipes:Recipes, inventory:ModuleInventory):
-	self.inventory = inventory
-	self.recipes = recipes
+func activate(grid_mover:ModuleGridMover, r:Recipes, i:ModuleInventory):
+	self.inventory = i
+	self.recipes = r
 	grid_mover.cell_entered.connect(on_cell_entered)
 
 func on_cell_entered(cell:Cell):
@@ -63,7 +63,7 @@ func on_cell_entered(cell:Cell):
 	cell.machine.on_visit(is_match, inventory)
 	if not is_match: return
 	
-	emit_signal("order_delivered", inventory.get_content())
+	order_delivered.emit(inventory.get_content())
 	
 	inventory.clear()
 	cell.remove_machine()

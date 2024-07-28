@@ -5,14 +5,18 @@ class_name Countdown extends CanvasLayer
 
 signal is_done()
 
-var seconds := 5
+var seconds := 0
 
 func _ready():
 	set_visible(false)
 
-func activate():
+func appear():
 	set_visible(true)
-	update_seconds(0)
+	update_seconds(GConfig.countdown_num_seconds)
+
+func disappear():
+	set_visible(false)
+	seconds = 0
 
 func _on_timer_timeout() -> void:
 	update_seconds(-1)
@@ -21,8 +25,8 @@ func update_seconds(ds:int) -> void:
 	seconds += ds
 	
 	if seconds <= 0:
-		emit_signal("is_done")
-		queue_free()
+		is_done.emit()
+		disappear()
 		return
 	
 	label.set_text(str(seconds))

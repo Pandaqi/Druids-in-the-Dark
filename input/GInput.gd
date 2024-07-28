@@ -70,6 +70,9 @@ func _ready():
 	build_ui_input_map()
 
 func create_debugging_players():
+	if not OS.is_debug_build(): return
+	if get_player_count() > 0: return
+	
 	for i in range(1):
 		add_new_player(InputDevice.KEYBOARD)
 
@@ -97,6 +100,10 @@ func build_ui_input_map():
 	ev = InputEventKey.new()
 	ev.keycode = KEY_ENTER
 	build_input_action("add_keyboard_player", ev)
+	
+	ev = InputEventKey.new()
+	ev.keycode = KEY_ESCAPE
+	build_input_action("remove_keyboard_player", ev)
 	
 	#
 	# Pause Menu
@@ -297,7 +304,7 @@ func check_remove_player(ev):
 	if not is_error_code(res): 
 		data.failed = false
 		data.device = res
-		return res
+		return data
 	
 	return data
 
@@ -523,9 +530,9 @@ func get_last_added_player():
 
 func find_last_keyboard_player():
 	for i in range(device_order.size()-1,-1,-1):
-		for data in device_order[i]:
-			if data.device == -1:
-				return i
+		var data = device_order[i]
+		if data.device == -1:
+			return i
 	
 	return -1
 

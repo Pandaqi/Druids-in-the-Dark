@@ -23,7 +23,7 @@ func get_order() -> Array[String]:
 func is_occupied() -> bool:
 	return inventory.has_content()
 
-func start_timer():
+func start_timer() -> void:
 	if GConfig.orders_are_timed:
 		var order_dur_scalar = GConfig.order_duration_scalar[GInput.get_player_count()]
 		timer.wait_time = randf_range(GConfig.def_order_duration.min, GConfig.def_order_duration.max) * order_dur_scalar
@@ -36,29 +36,34 @@ func start_timer():
 	tween_occupied.tween_property(cell_element, "scale", 1.0*Vector2.ONE, dur)
 	tween_occupied.set_loops(1000)
 
-func change_timer(dt:float):
+func change_timer(dt:float) -> void:
 	if not GConfig.orders_are_timed: return
 	
 	var new_time_left = timer.time_left + dt
 	timer.stop()
 	timer.start(new_time_left)
 
-func _physics_process(dt:float) -> void:
-	if is_occupied() and GConfig.orders_are_timed:
-		var timer_left = timer.time_left / timer.wait_time
-		cell.floor_sprite.set_scale(timer_left * Vector2.ONE)
+func _physics_process(_dt:float) -> void:
+	update_progress_bar()
 
-func finish():
+func update_progress_bar() -> void:
+	if not GConfig.orders_are_timed: return
+	if not is_occupied(): return
+	
+	var timer_left = timer.time_left / timer.wait_time
+	cell.floor_sprite.set_scale(timer_left * Vector2.ONE)
+
+func finish() -> void:
 	tween_occupied.kill()
 	inventory.clear()
 	remove_from_group("Customers")
 	cell.floor_sprite.set_scale(Vector2.ONE)
 
-func on_timer_timeout():
+func on_timer_timeout() -> void:
 	finish()
-	GDict.emit_signal("game_over", false)
+	GDict.game_over.emit(false)
 
-func on_visit(is_match:bool, visitor_inventory:ModuleInventory):
+func on_visit(is_match:bool, visitor_inventory:ModuleInventory) -> void:
 	visited = true
 	
 	if GConfig.order_only_visible_after_visit:
@@ -73,5 +78,5 @@ func on_visit(is_match:bool, visitor_inventory:ModuleInventory):
 		visitor_inventory.clear()
 	
 	if GConfig.wrong_order_moves_machines and not is_match:
-		GDict.emit_signal("map_shuffle")
+		GDict.map_shuffle.emit()
 	

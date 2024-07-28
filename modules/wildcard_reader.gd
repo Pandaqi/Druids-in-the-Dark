@@ -3,9 +3,9 @@ class_name ModuleWildcardReader extends Node
 var recipes : Recipes
 var effects_tracker : ModuleEffectsTracker
 
-func activate(recipes:Recipes, grid_mover:ModuleGridMover, effects_tracker:ModuleEffectsTracker):
-	self.recipes = recipes
-	self.effects_tracker = effects_tracker
+func activate(r:Recipes, grid_mover:ModuleGridMover, et:ModuleEffectsTracker):
+	self.recipes = r
+	self.effects_tracker = et
 	grid_mover.cell_entered.connect(on_cell_entered)
 
 func on_cell_entered(cell:Cell):

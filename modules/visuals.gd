@@ -7,7 +7,9 @@ var movement_duration := GConfig.def_move_tween_duration
 
 signal movement_done()
 
-func activate(grid_mover:ModuleGridMover, effects_tracker:ModuleEffectsTracker):
+func activate(player_num: int, grid_mover:ModuleGridMover, effects_tracker:ModuleEffectsTracker):
+	sprite.set_frame(4 + player_num)
+	
 	grid_mover.position_updated.connect(on_position_updated)
 	effects_tracker.effects_changed.connect(on_effects_changed)
 	movement_done.connect(grid_mover.on_movement_done)
@@ -20,17 +22,23 @@ func on_position_updated(real_pos:Vector2, instant:bool):
 		on_movement_done()
 		return
 	
-	var tw = get_tree().create_tween()
+	var tw := get_tree().create_tween()
 	tw.tween_property(entity, "position", real_pos, movement_duration)
 	tw.tween_callback(on_movement_done)
+	
+	var tw_rot := get_tree().create_tween()
+	var wiggle_rot := 0.05*PI
+	tw_rot.tween_property(self, "rotation", -wiggle_rot, 0.25*movement_duration)
+	tw_rot.tween_property(self, "rotation", wiggle_rot, 0.5*movement_duration)
+	tw_rot.tween_property(self, "rotation", 0, 0.25*movement_duration)
 
 func on_movement_done():
 	moving = false
-	emit_signal("movement_done")
+	movement_done.emit()
 
-# @TODO: clamp between reasonable values
 func change_speed(factor:float):
-	movement_duration *= factor
+	var base_val := GConfig.def_move_tween_duration
+	movement_duration = clamp(factor, 0.25*base_val, 4.0*base_val)
 
 func on_effects_changed(eff:Array[String]) -> void:
 	if not GConfig.delivered_components_create_effects: return

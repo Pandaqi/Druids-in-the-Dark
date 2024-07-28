@@ -5,4 +5,4 @@ func activate(grid_mover:ModuleGridMover):
 
 func on_cell_entered(cell:Cell):
 	if cell.get_machine_type() != "spikes": return
-	GDict.emit_signal("game_over", false)
+	GDict.game_over.emit(false)

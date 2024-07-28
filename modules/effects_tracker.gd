@@ -19,4 +19,4 @@ func on_order_delivered(new_components:Array[String]):
 		var data = GDict.get_element_data(elem)
 		if data.effect == "non_interact": non_interact = true
 	
-	emit_signal("effects_changed", prev_components)
+	effects_changed.emit(prev_components)

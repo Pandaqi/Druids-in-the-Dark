@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://e2u1cbhiwamd"]
+
+[ext_resource type="Script" path="res://modules/machines/planter.gd" id="1_jtm32"]
+[ext_resource type="PackedScene" uid="uid://cj5gy322ykoc6" path="res://modules/inventory/inventory_item.tscn" id="2_x1ei6"]
+
+[node name="Planter" type="Node2D"]
+script = ExtResource("1_jtm32")
+
+[node name="InventoryItem" parent="." instance=ExtResource("2_x1ei6")]
+scale = Vector2(0.25, 0.25)
+
+[node name="Timer" type="Timer" parent="."]
+one_shot = true

@@ -17,7 +17,7 @@ vframes = 2
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("1_5tt0i")
 hframes = 5
-vframes = 3
+vframes = 4
 
 [node name="Label" type="Label" parent="."]
 offset_left = -284.0

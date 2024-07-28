@@ -7,7 +7,7 @@ class_name Tutorial extends CanvasLayer
 @onready var anim_player : AnimationPlayer = $AnimationPlayer
 
 var active := false
-var tutorial_image_spritesheet : Texture = preload("res://main/sprites.webp") #preload("res://tutorial/spritesheet.webp")
+var tutorial_image_spritesheet : Texture = preload("res://tutorial/tutorials.webp")
 
 signal dismissed()
 
@@ -19,7 +19,13 @@ func _input(ev):
 func dismiss():
 	set_visible(false)
 	active = false
-	emit_signal("dismissed")
+	dismissed.emit()
+
+# @NOTE: this would be used if I ever make a savegame functionality, and you can restart from any level
+func load_cumulative_properties_until(level:int):
+	load_default_properties()
+	for i in range(level+1):
+		load_properties_of(i)
 
 func get_data_from_level(level:int) -> Dictionary:
 	if level >= GDict.TUTORIAL_ORDER.size(): return {}
@@ -29,11 +35,15 @@ func get_data_from_level(level:int) -> Dictionary:
 
 func load_default_properties():
 	load_changes(GDict.TUTORIALS.default.changes)
+	GConfig.machines_included = []
 
 func load_properties_of(level:int) -> void:
 	var data := get_data_from_level(level)
 	if data.keys().size() <= 0: return
+	
 	load_changes(data.changes)
+	if "machines" in data:
+		GConfig.machines_included += data.machines
 
 func load_changes(changes:Dictionary):
 	for key in changes:
@@ -41,10 +51,18 @@ func load_changes(changes:Dictionary):
 
 func display(level:int) -> void:
 	var data := get_data_from_level(level)
-	if data.keys().size() <= 0: return
+	print("Should display tutorial")
+	print(level)
+	print(data)
+	if data.keys().size() <= 0: 
+		await get_tree().process_frame
+		dismiss()
+		return
+	
+	print("Displaying tutorial")
 	
 	set_visible(true)
-	active = true
+	anim_player.stop(false)
 	anim_player.play("tutorial_popup")
 	
 	# set tutorial text
@@ -66,3 +84,6 @@ func display(level:int) -> void:
 	a2.atlas = tutorial_image_spritesheet
 	a2.region = region2
 	tut_image_2.texture = a2
+	
+	await anim_player.animation_finished
+	active = true

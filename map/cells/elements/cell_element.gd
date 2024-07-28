@@ -13,6 +13,8 @@ func set_type(t:String):
 	sprite.set_frame(GDict.get_element_data(t).frame)
 	
 	if is_potion(): self.add_to_group("Potions")
+	if is_component(): self.add_to_group("Components")
+	if is_potion() or is_component(): self.add_to_group("PotionsAndComponents")
 
 func is_potion() -> bool:
 	return type in GDict.POTIONS

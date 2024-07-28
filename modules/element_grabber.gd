@@ -12,5 +12,8 @@ func on_cell_entered(cell:Cell):
 	if not elem: return
 	if not elem.is_component(): return
 	
+	# no space 
+	if inventory.is_full(): return
+	
 	inventory.add_content(elem.type)
 	cell.remove_element()

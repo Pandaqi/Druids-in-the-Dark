@@ -1,0 +1,57 @@
+[gd_scene load_steps=4 format=3 uid="uid://co18g8203lcjm"]
+
+[ext_resource type="Script" path="res://ui/player_select.gd" id="1_qb46y"]
+[ext_resource type="Theme" uid="uid://c0bfo1n4w7tgt" path="res://ui/default_theme.tres" id="2_enwu2"]
+[ext_resource type="Texture2D" uid="uid://belshgxot58hl" path="res://ui/nine_patch_atlas.tres" id="2_xqqw1"]
+
+[node name="PlayerSelect" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+size_flags_horizontal = 3
+script = ExtResource("1_qb46y")
+
+[node name="NinePatchRect" type="NinePatchRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_xqqw1")
+patch_margin_left = 64
+patch_margin_top = 64
+patch_margin_right = 64
+patch_margin_bottom = 64
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 24
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 24
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="PlayerID" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme = ExtResource("2_enwu2")
+text = "Player 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Instruction" type="Label" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(128, 128)
+layout_mode = 2
+theme = ExtResource("2_enwu2")
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+text = "Press ENTER for keyboard player, or ANY button for gamepad."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3

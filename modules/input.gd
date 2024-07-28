@@ -10,10 +10,10 @@ func activate(num:int):
 func is_connected_to_player() -> bool:
 	return player_num >= 0 and player_num < GInput.get_player_count()
 
-func _physics_process(dt:float) -> void:
+func _physics_process(_dt:float) -> void:
 	if not is_connected_to_player(): return
 	update_movement_vector()
 
 func update_movement_vector() -> void:
 	var move_vec = GInput.get_move_vec(player_num)
-	emit_signal("movement_vector_update", move_vec)
+	movement_vector_update.emit(move_vec)
