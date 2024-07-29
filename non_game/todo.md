@@ -3,14 +3,8 @@
 
 ### To-Do
 
-* Marketing Image/Logo of game
 * Particles when breaking stuff, when moving, when delivering, when something mutates, etcetera
 * Soundtrack + SoundFX
-
-## PUBLISHING (don't forget)
-
-* Make Menu the main scene
-
 
 ### Polishing / Future To-Do
 

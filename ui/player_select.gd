@@ -7,6 +7,7 @@ class_name PlayerSelect extends Control
 @onready var player_visual = $MarginContainer/VBoxContainer/PlayerVisual
 @onready var player_visual_texture = $MarginContainer/VBoxContainer/PlayerVisual/MarginContainer/TextureRect
 @onready var input_hint = $MarginContainer/VBoxContainer/InputHint
+@onready var anim_player : AnimationPlayer = $AnimationPlayer
 
 var active := true
 var player_num := -1
@@ -57,12 +58,14 @@ func ready_down():
 	if not is_ready: return
 	is_ready = false
 	ready_label.set_visible(false)
+	anim_player.stop()
 
 func ready_up():
 	is_ready = true
 	ready_label.set_visible(true)
 	instruction.set_visible(false)
 	readied_up.emit()
+	anim_player.play("player_ready_wiggle")
 
 func _input(ev):
 	if is_ready: return

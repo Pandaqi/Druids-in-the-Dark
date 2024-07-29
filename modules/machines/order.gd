@@ -71,7 +71,7 @@ func on_timer_timeout() -> void:
 func on_visit(is_match:bool, visitor_inventory:ModuleInventory) -> void:
 	visited = true
 	
-	if not is_match and inventory.visible:
+	if not is_match and inventory.visible and visitor_inventory.has_content():
 		GDict.feedback.emit(cell.get_position(), "Wrong Order!")
 	
 	if GConfig.order_only_visible_after_visit:
