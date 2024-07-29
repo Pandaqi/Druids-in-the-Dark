@@ -16,7 +16,9 @@ func on_cell_entered(cell:Cell):
 	if machine != "recipe_book": return
 	
 	# if interaction is disabled, abort
-	if GConfig.delivered_components_create_effects and effects_tracker.non_interact: return
+	if GConfig.delivered_components_create_effects and effects_tracker.non_interact: 
+		GDict.feedback.emit(cell.get_position(), "Non-Interact Curse!")
+		return
 	
 	# other special effects based on interaction
 	if GConfig.recipe_book_visit_changes_recipes:
@@ -29,6 +31,7 @@ func on_cell_entered(cell:Cell):
 		if move_vec.x < -0.03 or move_vec.y < -0.03:
 			dir = -1
 	
-	cell.machine.change_index(dir, recipes)
+	cell.machine.change_index(dir)
+	GDict.feedback.emit(cell.get_position(), "Flip!")
 	
 	

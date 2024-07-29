@@ -14,6 +14,8 @@ func on_cell_entered(cell:Cell):
 	if not elem: return
 	if not elem.is_potion(): return
 	
+	GDict.feedback.emit(cell.get_position(), "Break!")
+	
 	# @NOTE: This ensures shadows are correct when we try to do this
 	await get_tree().process_frame
 	

@@ -43,6 +43,10 @@ func change_timer(dt:float) -> void:
 	timer.stop()
 	timer.start(new_time_left)
 
+func get_time_fraction() -> float:
+	if not GConfig.orders_are_timed: return 1.0
+	return timer.time_left / timer.wait_time
+
 func _physics_process(_dt:float) -> void:
 	update_progress_bar()
 
@@ -50,7 +54,7 @@ func update_progress_bar() -> void:
 	if not GConfig.orders_are_timed: return
 	if not is_occupied(): return
 	
-	var timer_left = timer.time_left / timer.wait_time
+	var timer_left = get_time_fraction()
 	cell.floor_sprite.set_scale(timer_left * Vector2.ONE)
 
 func finish() -> void:
@@ -61,17 +65,23 @@ func finish() -> void:
 
 func on_timer_timeout() -> void:
 	finish()
+	GDict.feedback.emit(cell.get_position(), "Too Late!")
 	GDict.game_over.emit(false)
 
 func on_visit(is_match:bool, visitor_inventory:ModuleInventory) -> void:
 	visited = true
 	
+	if not is_match and inventory.visible:
+		GDict.feedback.emit(cell.get_position(), "Wrong Order!")
+	
 	if GConfig.order_only_visible_after_visit:
+		GDict.feedback.emit(cell.get_position(), "Your order, please?")
 		inventory.set_visible(true)
 	
 	if GConfig.customer_visit_delays_timer and not is_match:
 		var avg_timer : float = (GConfig.def_order_duration.min + GConfig.def_order_duration.max)
 		var delay = 0.5 * avg_timer * GConfig.customer_timer_delay_scalar
+		GDict.feedback.emit(cell.get_position(), "Extra Time!")
 		cell.machine.change_timer(delay)
 	
 	if GConfig.wrong_order_is_garbage and not is_match:

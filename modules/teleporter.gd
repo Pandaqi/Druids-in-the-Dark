@@ -19,3 +19,4 @@ func on_cell_entered(cell:Cell):
 	
 	var new_cell : Cell = valid_cells.pop_back()
 	grid_mover.teleport(new_cell.pos)
+	GDict.feedback.emit(cell.get_position(), "Teleport!")

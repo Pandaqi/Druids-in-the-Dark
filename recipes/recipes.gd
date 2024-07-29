@@ -67,12 +67,12 @@ func get_components_for(potion:String) -> Array[String]:
 func count() -> int:
 	return dict.keys().size()
 
-func on_order_delivered():
+func on_order_delivered(comps:Array[String], time_left:float):
 	progression.check_game_over()
-	# @TODO: some bonus/reward?
-
-func _on_progression_new_level() -> void:
-	regenerate()
+	
+	# time_left is fraction between 0 and 1; less means you were slower, so fewer points
+	var score := comps.size() * 10 * time_left
+	GDict.scored.emit(score)
 
 func select_potion_that_includes(potions:Array[String], comp:String) -> String:
 	var suitable_potions : Array[String] = []

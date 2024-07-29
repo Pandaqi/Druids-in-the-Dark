@@ -12,6 +12,9 @@ func on_cell_entered(cell:Cell):
 	if cell.get_machine_type() != "wildcard": return
 	
 	# if interaction is disabled, abort
-	if GConfig.delivered_components_create_effects and effects_tracker.non_interact: return
+	if GConfig.delivered_components_create_effects and effects_tracker.non_interact: 
+		GDict.feedback.emit(cell.get_position(), "Non-Interact Curse!")
+		return
 	
 	cell.machine.regenerate(recipes)
+	GDict.feedback.emit(cell.get_position(), "Change!")

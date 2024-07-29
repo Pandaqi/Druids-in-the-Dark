@@ -5,6 +5,8 @@ extends Node
 signal game_over(we_win:bool)
 signal map_shuffle()
 signal toggle_shadows_globally(in_shadow:bool)
+signal scored(points:float)
+signal feedback(pos:Vector2, txt:String)
 
 const ELEMENTS : Dictionary = {
 	"strawberry": { "frame": 0, "effect": "shadow_plus" },

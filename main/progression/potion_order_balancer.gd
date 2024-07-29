@@ -45,7 +45,7 @@ func on_timer_timeout() -> void:
 		order_cells_free.append(cell)
 	order_cells_free.shuffle()
 	
-	var potion_cells = map.query_cells({ "empty": true, "shadow": false, "num": 1 })
+	var potion_cells = map.query_cells({ "empty": true, "shadow": false, "machine_neighbor_forbidden": "order", "num": 1 })
 	
 	var need_no_more_customers := order_cells_free.size() <= 0 or customer_diff <= 0
 	var need_no_more_potions := potion_cells.size() <= 0 or potion_diff <= 0

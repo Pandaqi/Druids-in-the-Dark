@@ -8,3 +8,4 @@ script = ExtResource("1_w13p1")
 
 [node name="Inventory" type="Node2D" parent="."]
 script = ExtResource("2_1vv1r")
+wrap_after_cols = 2

@@ -372,7 +372,7 @@ func unsplit_gamepad_for_player(p_num : int) -> Dictionary:
 	var device = device_order[p_num].device
 	return unsplit_gamepad(device)
 
-func add_new_player(type, id : int = -1, custom_splits : Array = []) -> int:
+func add_new_player(type:InputDevice, id : int = -1, custom_splits : Array = []) -> int:
 	if max_devices_reached(): return InputError.MAX_DEVICES_REACHED
 	if type == InputDevice.KEYBOARD and num_keyboard_players >= max_keyboard_devices: return InputError.MAX_DEVICES_REACHED
 	
@@ -538,6 +538,21 @@ func find_last_keyboard_player():
 
 func remove_last_keyboard_player():
 	return remove_player(find_last_keyboard_player())
+
+func get_keyboard_keys_for_player(player_num : int) -> Dictionary:
+	if not is_keyboard_player(player_num): return {}
+	var data = device_order[player_num]
+	var dict : Dictionary = {}
+	for i in range(input_order.size()):
+		dict[input_order[i]] = keyboard_inputs[data.splits[0]][i]
+	return dict
+	
+	# OTHERWISE, we'd have to re-check every key and what inputs it has, which is just not needed so far
+	#var dict : Dictionary = {}
+	#for action in input_order:
+		#var key = build_key(action, data.device, data.splits[0])
+		#dict[ev] = 
+	#InputMap.action_get_events("")
 
 func player_doesnt_exist(player_num : int) -> bool:
 	return player_num >= device_order.size()

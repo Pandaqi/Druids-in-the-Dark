@@ -13,7 +13,9 @@ func on_cell_entered(cell:Cell):
 	
 	# if interaction is disabled, abort
 	if not GConfig.players_interact_by_sharing_inventory: return
-	if GConfig.delivered_components_create_effects and effects_tracker.non_interact: return
+	if GConfig.delivered_components_create_effects and effects_tracker.non_interact: 
+		GDict.feedback.emit(cell.get_position(), "Non-Interact Curse!")
+		return
 	
 	# figure out who should get all the elements
 	var best_player : Player = null

@@ -6,6 +6,7 @@ var item_nodes : Array[Node2D] = []
 @export var pos_offset : Vector2 = Vector2.ZERO
 @export var group_by_type : bool = false
 @export var max_size : int = -1
+@export var wrap_after_cols : int = -1 # the NUMBER of colums after which to wrap; -1 = none
 
 func _ready():
 	if max_size < 0: max_size = GConfig.inventory_max_size
@@ -59,18 +60,30 @@ func visualize():
 				list_freq[idx] += 1
 	
 	# make sure we have enough nodes
-	var num_items = list.size()
+	var num_items := list.size()
 	while item_nodes.size() < num_items:
-		var item_node = item_scene.instantiate()
+		var item_node := item_scene.instantiate()
 		add_child(item_node)
 		item_nodes.append(item_node)
 	
-	var offset_per_item = Vector2.RIGHT * 512.0
-	var offset_all_items = -0.5 * (num_items - 1) * offset_per_item
-	var cur_pos = offset_all_items
+	
+	var num_cols := num_items
+	var num_rows := 1
+	if wrap_after_cols > 0:
+		num_cols = min(wrap_after_cols, num_items)
+		num_rows = ceil(num_items / float(wrap_after_cols))
+	
+	var offset_per_item := Vector2.ONE * 512.0
+	
+	var offset_all_items := Vector2(
+		-0.5 * (num_cols - 1),
+		-0.5 * (num_rows - 1)
+	) * offset_per_item
+	
+	var cur_pos := offset_all_items
 	for i in range(item_nodes.size()):
-		var node = item_nodes[i]
-		var item_has_content = i < num_items
+		var node := item_nodes[i]
+		var item_has_content := i < num_items
 		node.set_visible(item_has_content)
 		
 		if item_has_content:
@@ -80,4 +93,9 @@ func visualize():
 				node.set_number(list_freq[i])
 
 			node.set_position(cur_pos)
-			cur_pos += offset_per_item
+			cur_pos += Vector2(offset_per_item.x, 0)
+			
+			var wrap_line = (i+1) % wrap_after_cols == 0
+			if wrap_line:
+				cur_pos = Vector2(offset_all_items.x, cur_pos.y + offset_per_item.y)
+			

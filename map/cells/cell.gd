@@ -83,6 +83,7 @@ func mutate() -> void:
 	if not get_element(): return
 	remove_element()
 	add_element(GDict.get_random_mutation())
+	GDict.feedback.emit(get_position(), "Mutate!")
 
 ### Machine management
 func get_machine_type() -> String:

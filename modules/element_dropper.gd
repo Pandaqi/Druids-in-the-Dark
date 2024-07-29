@@ -15,3 +15,4 @@ func on_cell_entered(cell:Cell):
 		cell.machine.add_content(elem)
 	
 	inventory.clear()
+	GDict.feedback.emit(cell.get_position(), "In the bin!")

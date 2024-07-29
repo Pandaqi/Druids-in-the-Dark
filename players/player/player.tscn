@@ -28,7 +28,7 @@ script = ExtResource("13_bqttd")
 modulate = Color(0.141176, 0.141176, 0.141176, 0.862745)
 texture = ExtResource("14_8f2d5")
 hframes = 4
-vframes = 2
+vframes = 3
 
 [node name="Visuals" type="Node2D" parent="."]
 script = ExtResource("1_fbtq4")
@@ -38,11 +38,12 @@ modulate = Color(1, 1, 1, 0.784314)
 scale = Vector2(0.33, 0.33)
 texture = ExtResource("14_8f2d5")
 hframes = 4
-vframes = 2
+vframes = 3
 frame = 4
 
 [node name="Inventory" type="Node2D" parent="."]
 script = ExtResource("9_u3cna")
+wrap_after_cols = 2
 
 [node name="Input" type="Node" parent="."]
 script = ExtResource("2_allid")

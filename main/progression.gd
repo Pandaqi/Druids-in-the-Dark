@@ -8,6 +8,7 @@ var game_over : GameOver
 var players : Players
 
 var level := 0
+var score := 0.0
 
 var all_elements_order : Array[String]
 var num_elements_order : Array[int]
@@ -34,6 +35,7 @@ func activate(m:Map, t:Tutorial, c:Countdown, s:Shadows, g:GameOver, p:Players, 
 	self.players = p
 	
 	GDict.game_over.connect(on_game_over)
+	GDict.scored.connect(on_scored)
 
 	level = 0
 	if OS.is_debug_build() and GConfig.debug_starting_level > 0:
@@ -99,7 +101,7 @@ func get_potion_max_length() -> int:
 func check_game_over():
 	var no_orders_left = map.query_cells({ "machine": "order" }).size() <= 0
 	if no_orders_left:
-		GDict.emit_signal("game_over", true)
+		GDict.game_over.emit(true)
 
 func on_game_over(we_win:bool):
 	print("Game Over!")
@@ -163,3 +165,6 @@ func make_garbage_bin_permanent():
 func add_planter_cell(key:String) -> void:
 	if planter_cells.size() >= GConfig.prog_max_planter_cells: return
 	planter_cells.append(key)
+
+func on_scored(pts:float) -> void:
+	score = clamp(score + pts, 0, 999)

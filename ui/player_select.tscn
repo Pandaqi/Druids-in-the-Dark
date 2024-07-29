@@ -1,8 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://co18g8203lcjm"]
+[gd_scene load_steps=7 format=3 uid="uid://co18g8203lcjm"]
 
 [ext_resource type="Script" path="res://ui/player_select.gd" id="1_qb46y"]
 [ext_resource type="Theme" uid="uid://c0bfo1n4w7tgt" path="res://ui/default_theme.tres" id="2_enwu2"]
 [ext_resource type="Texture2D" uid="uid://belshgxot58hl" path="res://ui/nine_patch_atlas.tres" id="2_xqqw1"]
+[ext_resource type="Texture2D" uid="uid://d1hbyhc7hnmuy" path="res://main/misc.webp" id="3_hmsbx"]
+[ext_resource type="Script" path="res://ui/input_hint.gd" id="5_if1do"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r2fbg"]
+atlas = ExtResource("3_hmsbx")
+region = Rect2(0, 512, 512, 512)
 
 [node name="PlayerSelect" type="Control"]
 layout_mode = 3
@@ -30,14 +36,37 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 24
-theme_override_constants/margin_top = 24
-theme_override_constants/margin_right = 24
-theme_override_constants/margin_bottom = 24
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
 layout_mode = 2
 alignment = 1
+
+[node name="PlayerVisual" type="MarginContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="MarginContainer/VBoxContainer/PlayerVisual"]
+layout_mode = 2
+texture = ExtResource("2_xqqw1")
+patch_margin_left = 64
+patch_margin_top = 64
+patch_margin_right = 64
+patch_margin_bottom = 64
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer/PlayerVisual"]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="TextureRect" type="TextureRect" parent="MarginContainer/VBoxContainer/PlayerVisual/MarginContainer"]
+layout_mode = 2
+texture = SubResource("AtlasTexture_r2fbg")
+expand_mode = 5
 
 [node name="PlayerID" type="Label" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -50,8 +79,87 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(128, 128)
 layout_mode = 2
 theme = ExtResource("2_enwu2")
-theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_color = Color(1, 0.443137, 1, 1)
 text = "Press ENTER for keyboard player, or ANY button for gamepad."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="InputHint" type="CenterContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+script = ExtResource("5_if1do")
+
+[node name="Control" type="Control" parent="MarginContainer/VBoxContainer/InputHint"]
+custom_minimum_size = Vector2(128, 96)
+layout_mode = 2
+
+[node name="Node2D" type="Node2D" parent="MarginContainer/VBoxContainer/InputHint/Control"]
+position = Vector2(64, 48.5)
+scale = Vector2(0.25, 0.25)
+
+[node name="Sprite2D" type="Sprite2D" parent="MarginContainer/VBoxContainer/InputHint/Control/Node2D"]
+texture = ExtResource("3_hmsbx")
+hframes = 4
+vframes = 3
+frame = 8
+
+[node name="LabelTop" type="Label" parent="MarginContainer/VBoxContainer/InputHint/Control/Node2D"]
+offset_left = -71.0
+offset_top = -158.0
+offset_right = 76.0
+offset_bottom = -10.0
+rotation = -1.5708
+pivot_offset = Vector2(70, 70)
+theme = ExtResource("2_enwu2")
+theme_override_font_sizes/font_size = 128
+text = "A"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LabelBottom" type="Label" parent="MarginContainer/VBoxContainer/InputHint/Control/Node2D"]
+offset_left = -71.0
+offset_top = 10.5
+offset_right = 76.0
+offset_bottom = 158.5
+rotation = 1.5708
+pivot_offset = Vector2(70, 70)
+theme = ExtResource("2_enwu2")
+theme_override_font_sizes/font_size = 128
+text = "A"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LabelLeft" type="Label" parent="MarginContainer/VBoxContainer/InputHint/Control/Node2D"]
+offset_left = -240.0
+offset_top = 10.5
+offset_right = -93.0
+offset_bottom = 158.5
+rotation = 3.14159
+pivot_offset = Vector2(70, 70)
+theme = ExtResource("2_enwu2")
+theme_override_font_sizes/font_size = 128
+text = "A"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="LabelRight" type="Label" parent="MarginContainer/VBoxContainer/InputHint/Control/Node2D"]
+offset_left = 95.0
+offset_top = 10.5
+offset_right = 242.0
+offset_bottom = 158.5
+pivot_offset = Vector2(70, 70)
+theme = ExtResource("2_enwu2")
+theme_override_font_sizes/font_size = 128
+text = "A"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Ready" type="Label" parent="MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+theme = ExtResource("2_enwu2")
+theme_override_font_sizes/font_size = 32
+text = "READY!"
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3

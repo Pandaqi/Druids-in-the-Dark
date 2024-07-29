@@ -12,7 +12,7 @@ element_scene = ExtResource("2_k6an0")
 [node name="Floor" type="Sprite2D" parent="."]
 texture = ExtResource("3_26i0j")
 hframes = 4
-vframes = 2
+vframes = 3
 frame = 1
 
 [node name="ShadowTimeTracker" type="Node" parent="." node_paths=PackedStringArray("cell")]

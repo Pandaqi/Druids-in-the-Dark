@@ -2,6 +2,7 @@ class_name ModuleOrderGiver extends Node
 
 var inventory : ModuleInventory
 var recipes : Recipes
+@onready var entity = get_parent()
 
 signal order_delivered(order:Array[String])
 
@@ -32,6 +33,7 @@ func on_cell_entered(cell:Cell):
 			needed_components.append(elem)
 	
 	# check if we match EXACTLY
+	var needed_components_copy := needed_components.duplicate(true)
 	var our_components : Array[String] = inventory.get_content()
 
 	# first handle raw matches
@@ -63,11 +65,16 @@ func on_cell_entered(cell:Cell):
 	cell.machine.on_visit(is_match, inventory)
 	if not is_match: return
 	
-	order_delivered.emit(inventory.get_content())
+	var time_fraction : float = cell.machine.get_time_fraction()
+	var content := inventory.get_content()
 	
 	inventory.clear()
 	cell.remove_machine()
-	recipes.on_order_delivered()
+	recipes.on_order_delivered(needed_components_copy, time_fraction)
+	GDict.feedback.emit(entity.get_position(), "Delivered!")
+	
+	# @NOTE: signal must come at the very end, otherwise we haven't removed order yet and should-end-game check fails
+	order_delivered.emit(inventory.get_content())
 	
 	if GConfig.potion_delivery_regenerates_recipe and potion_inside_order:
 		recipes.regenerate_potion(potion_inside_order)

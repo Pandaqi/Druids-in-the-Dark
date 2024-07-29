@@ -14,7 +14,7 @@ func _ready() -> void:
 	progression.activate(map, tutorial, countdown, shadows, game_over, players, recipes)
 	
 	players.activate(map, recipes, shadows)
-	map.activate(progression, players)
+	map.activate(progression, players, recipes)
 	recipes.activate(progression)
 	shadows.activate(map, players)
 	cam.activate(map)

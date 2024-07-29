@@ -7,11 +7,13 @@ var grid : Array[Cell] = []
 var size : Vector2i = Vector2i(8,6)
 var progression : Progression
 var players : Players
+var recipes : Recipes
 @export var cell_scene : PackedScene
 
-func activate(prog:Progression, p:Players) -> void:
+func activate(prog:Progression, p:Players, r: Recipes) -> void:
 	self.progression = prog
 	self.players = p
+	self.recipes = r
 	GDict.map_shuffle.connect(on_map_shuffle_requested)
 
 func regenerate() -> void:
@@ -27,6 +29,8 @@ func regenerate() -> void:
 	raw_size *= progression_growth
 	
 	size = raw_size.round()
+	
+	recipes.regenerate()
 	
 	# do the whole dance
 	create_grid()
@@ -193,6 +197,7 @@ func get_pos_after_move(grid_pos:Vector2i, vec:Vector2i) -> Vector2i:
 
 func add_player_to(grid_pos:Vector2i, p:Player) -> void:
 	if GConfig.disabled_cells_kill_you and get_cell_at(grid_pos).disabled:
+		GDict.feedback.emit(p.get_position(), "Oh no!")
 		GDict.game_over.emit(false)
 		
 	get_cell_at(grid_pos).add_player(p)
@@ -224,12 +229,14 @@ func query_cells(params:Dictionary) -> Array[Cell]:
 	var list : Array[Cell] = []
 	
 	var all_cells := grid
+	var fixed_num := "num" in params
 	
-	if "num" in params: 
+	if fixed_num: 
 		all_cells = grid.duplicate(false)
 		all_cells.shuffle()
 	
 	for cell in all_cells:
+		if fixed_num and list.size() >= params.num: break
 		if cell.disabled: continue
 		
 		var suitable = true
@@ -246,6 +253,15 @@ func query_cells(params:Dictionary) -> Array[Cell]:
 		if "empty" in params:
 			suitable = (params.empty == cell.is_empty()) and suitable
 		
+		if "machine_neighbor_forbidden" in params:
+			var nbs = get_neighbors_of(cell)
+			var is_forbidden := false
+			for nb in nbs:
+				if nb.get_machine_type() != params.machine_neighbor_forbidden: continue
+				is_forbidden = true
+				break
+			suitable = (not is_forbidden) and suitable
+		
 		if "machine" in params:
 			if not params.machine is Array: params.machine = [params.machine]
 			var any_match = (params.machine[0] == "any" and cell.get_machine_type())
@@ -254,8 +270,6 @@ func query_cells(params:Dictionary) -> Array[Cell]:
 		
 		if not suitable: continue
 		list.append(cell)
-		
-		if "num" in params and list.size() >= params.num: break
 	
 	return list
 
