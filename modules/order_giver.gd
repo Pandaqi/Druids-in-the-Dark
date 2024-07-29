@@ -74,7 +74,7 @@ func on_cell_entered(cell:Cell):
 	GDict.feedback.emit(entity.get_position(), "Delivered!")
 	
 	# @NOTE: signal must come at the very end, otherwise we haven't removed order yet and should-end-game check fails
-	order_delivered.emit(inventory.get_content())
+	order_delivered.emit(content)
 	
 	if GConfig.potion_delivery_regenerates_recipe and potion_inside_order:
 		recipes.regenerate_potion(potion_inside_order)

@@ -35,7 +35,7 @@ func set_player_num(p_num:int):
 			if not (key in labels): continue
 			
 			var key_conv := OS.get_keycode_string(keys_raw[key])
-			var label_rot := 0
+			#var label_rot := 0
 			var label : Label = labels[key]
 			if ["Left", "Right", "Up", "Down"].has(key_conv):
 				# for some fucking reason this doesn't set rotation correctly, so we just do the opposite:

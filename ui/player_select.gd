@@ -67,7 +67,7 @@ func ready_up():
 	readied_up.emit()
 	anim_player.play("player_ready_wiggle")
 
-func _input(ev):
+func _input(_ev):
 	if is_ready: return
 	if GInput.get_move_vec(player_num).length() > 0.5:
 		ready_up()

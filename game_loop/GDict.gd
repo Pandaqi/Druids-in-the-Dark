@@ -237,6 +237,14 @@ const TUTORIALS : Dictionary = {
 	}
 }
 
+func _ready():
+	var s = AudioStreamPlayer.new()
+	s.stream = preload("res://game_loop/theme_song.mp3")
+	s.process_mode = Node.PROCESS_MODE_ALWAYS
+	s.volume_db = -4
+	add_child(s)
+	s.play()
+
 func get_element_data(key:String):
 	if key in MACHINES: return MACHINES[key]
 	if key in POTIONS: return POTIONS[key]

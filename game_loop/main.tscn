@@ -466,5 +466,6 @@ theme = ExtResource("16_ugln2")
 text = "Continue (SPACE / ANY)"
 
 [connection signal="new_level" from="Progression" to="Map" method="_on_progression_new_level"]
+[connection signal="new_level" from="Progression" to="Feedback" method="_on_progression_new_level"]
 [connection signal="pressed" from="GameOver/Control/MarginContainer/MarginContainer/VBoxContainer/CenterContainer/HBoxContainer/Back" to="GameOver" method="on_back_pressed"]
 [connection signal="pressed" from="GameOver/Control/MarginContainer/MarginContainer/VBoxContainer/CenterContainer/HBoxContainer/Continue" to="GameOver" method="on_continue_pressed"]

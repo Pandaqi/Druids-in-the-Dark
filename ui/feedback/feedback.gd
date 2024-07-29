@@ -10,3 +10,8 @@ func on_feedback_given(pos:Vector2, txt:String):
 	f.set_position(pos)
 	add_child(f)
 	f.set_text(txt)
+
+func _on_progression_new_level() -> void:
+	var nodes = get_tree().get_nodes_in_group("Feedback")
+	for node in nodes: 
+		node.queue_free()

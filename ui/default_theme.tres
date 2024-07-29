@@ -8,6 +8,7 @@
 [resource]
 default_font = ExtResource("1_rcnvy")
 Button/colors/font_color = Color(0.0741275, 0.00106323, 0.00029513, 1)
+Button/colors/font_hover_color = Color(0.168955, 0.000199947, 0.256978, 1)
 Button/styles/focus = ExtResource("1_kibdt")
 Button/styles/hover = ExtResource("1_kibdt")
 Button/styles/normal = ExtResource("1_78lyg")

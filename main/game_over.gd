@@ -63,4 +63,4 @@ func on_continue_pressed():
 		get_tree().reload_current_scene()
 
 func on_back_pressed():
-	get_tree().change_scene_to_packed(preload("res://game_loop/menu.tscn"))
+	get_tree().change_scene_to_file("res://game_loop/menu.tscn")
