@@ -24,3 +24,11 @@ func is_component() -> bool:
 
 func is_dynamic() -> bool:
 	return type in GDict.MACHINES and GDict.MACHINES[type].dynamic
+
+func play_tween() -> void:
+	var tw = get_tree().create_tween()
+	var cur_scale = self.scale
+	tw.tween_property(self, "scale", 1.2*cur_scale, 0.1)
+	tw.tween_property(self, "scale", cur_scale, 0.2)
+	
+	

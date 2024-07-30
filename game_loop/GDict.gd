@@ -178,7 +178,6 @@ const TUTORIALS : Dictionary = {
 		"desc": "Whenever you [b]deliver[/b] an order, its ingredients will [b]stay visible[/b] through your shadow (until you deliver the next order).",
 		"changes": 
 		{
-			"map_spawns_components": true, # merely turned off when potions introduced
 			"shadow_filter_based_on_effects": true
 		},
 	},
@@ -195,6 +194,7 @@ const TUTORIALS : Dictionary = {
 		"desc": "You get a [b]Garbage Bin[/b]! Visit to throw away your inventory.\n (You can't do so by giving the wrong order anymore.)",
 		"changes": 
 		{
+			"map_spawns_components": true, # merely turned off when potions introduced (then kept off for a few levels)
 			"wrong_order_is_garbage": false
 		},
 		"machines": ["garbage_bin"]
@@ -241,7 +241,7 @@ func _ready():
 	var s = AudioStreamPlayer.new()
 	s.stream = preload("res://game_loop/theme_song.mp3")
 	s.process_mode = Node.PROCESS_MODE_ALWAYS
-	s.volume_db = -4
+	s.volume_db = -1.5
 	add_child(s)
 	s.play()
 

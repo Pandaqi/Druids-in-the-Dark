@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=3 uid="uid://cuyibogomoudd"]
+[gd_scene load_steps=7 format=3 uid="uid://cuyibogomoudd"]
 
 [ext_resource type="Script" path="res://map/cells/cell.gd" id="1_ulbue"]
 [ext_resource type="PackedScene" uid="uid://c6jx3glnxxis" path="res://map/cells/elements/cell_element.tscn" id="2_k6an0"]
 [ext_resource type="Texture2D" uid="uid://d1hbyhc7hnmuy" path="res://main/misc.webp" id="3_26i0j"]
 [ext_resource type="Script" path="res://modules/shadow_time_tracker.gd" id="4_xyqnj"]
+[ext_resource type="AudioStream" uid="uid://bh0oueert83t6" path="res://sound_fx/mutate.ogg" id="5_l3k1m"]
+[ext_resource type="PackedScene" uid="uid://emaoe74fpka6" path="res://players/particles.tscn" id="6_8ke38"]
 
 [node name="Cell" type="Node2D"]
 script = ExtResource("1_ulbue")
@@ -20,3 +22,10 @@ script = ExtResource("4_xyqnj")
 cell = NodePath("..")
 
 [node name="Timer" type="Timer" parent="ShadowTimeTracker"]
+
+[node name="ShadowEventPlayer" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_l3k1m")
+volume_db = -6.0
+max_distance = 5000.0
+
+[node name="ShadowEventParticles" parent="." instance=ExtResource("6_8ke38")]

@@ -1,30 +1,14 @@
 
 
 
-### To-Do
-
-Sound FX:
-
-* Soft whoosh for movement?
-* Countdown / Game started
-* Order delivered
-* When breaking potion
-* When changing wildcard/recipe book
-* Inventory Pick Up / Empty
-* Game Over / Game Win
-* When something mutates / order gets customer _in shadow_ => a general "something" happened in shadow feedback
-
-Particles:
-
-* When moving
-* When delivering
-* When breaking potion?
-* When something mutates
-* Other machines/situations?
-
 ### Polishing / Future To-Do
 
+* Add some more particles and animations
+  * A simple tween-animation when a machine is used (this is a default function on the cell, so it can be called by the machine modules)
+* Some way to GAIN more lives? (Especially in later levels, you might want that certainty.)
+* Wait with counting up #potions (in Progression) until they're actually introduced in the game?
 * Lean more into the "Holes" => breakable cells (after visiting X times), cells that are on/off half the time, etcetera
+  * Yeah, I have some GREAT ideas for better holes + movement stuff at the END of the devlog
 * Settings + Rebindable controls
 * A permanent icon to display if your non-interactive or not => Maybe smaller feedback elements to reveal what ingredients do (as bonuses/curses once delivered)
 

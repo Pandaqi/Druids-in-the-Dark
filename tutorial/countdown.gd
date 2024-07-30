@@ -2,6 +2,7 @@ class_name Countdown extends CanvasLayer
 
 @onready var cont : CenterContainer = $Control/CenterContainer
 @onready var label : Label = $Control/CenterContainer/Label
+@onready var audio_player : AudioStreamPlayer = $AudioStreamPlayer
 
 signal is_done()
 
@@ -28,6 +29,8 @@ func update_seconds(ds:int) -> void:
 		is_done.emit()
 		disappear()
 		return
+	
+	audio_player.play()
 	
 	label.set_text(str(seconds))
 	

@@ -1,7 +1,9 @@
-class_name ModuleOrderGiver extends Node
+class_name ModuleOrderGiver extends Node2D
 
 var inventory : ModuleInventory
 var recipes : Recipes
+@onready var audio_player : AudioStreamPlayer2D = $AudioStreamPlayer2D
+@onready var particles : CPUParticles2D = $DefaultParticles
 @onready var entity = get_parent()
 
 signal order_delivered(order:Array[String])
@@ -72,6 +74,10 @@ func on_cell_entered(cell:Cell):
 	cell.remove_machine()
 	recipes.on_order_delivered(needed_components_copy, time_fraction)
 	GDict.feedback.emit(entity.get_position(), "Delivered!")
+	
+	audio_player.pitch_scale = randf_range(0.9, 1.1)
+	audio_player.play()
+	particles.play()
 	
 	# @NOTE: signal must come at the very end, otherwise we haven't removed order yet and should-end-game check fails
 	order_delivered.emit(content)

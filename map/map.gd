@@ -93,11 +93,13 @@ func cut_holes_in_grid():
 
 func is_map_fully_connected() -> bool:
 	var num_enabled_cells = 0
+	var random_enabled_cell : Cell = null
 	for cell in grid:
 		if cell.disabled: continue
 		num_enabled_cells += 1
+		random_enabled_cell = cell
 	
-	var cells_to_visit : Array[Cell] = [grid.front()]
+	var cells_to_visit : Array[Cell] = [random_enabled_cell]
 	var cells_visited : Array[Cell] = []
 	while cells_to_visit.size() > 0:
 		var cell = cells_to_visit.pop_back()

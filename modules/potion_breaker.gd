@@ -1,7 +1,9 @@
-class_name ModulePotionBreaker extends Node
+class_name ModulePotionBreaker extends Node2D
 
 var map : Map
 var recipes : Recipes
+@onready var audio_player : AudioStreamPlayer2D = $AudioStreamPlayer2D
+@onready var particles : CPUParticles2D = $DefaultParticles
 
 func activate(m:Map, r:Recipes, grid_mover:ModuleGridMover):
 	self.map = m
@@ -37,3 +39,7 @@ func on_cell_entered(cell:Cell):
 	
 	# remove the actual potion
 	cell.remove_element()
+	
+	audio_player.pitch_scale = randf_range(0.9, 1.1)
+	audio_player.play()
+	particles.play()

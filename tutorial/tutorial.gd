@@ -43,7 +43,9 @@ func load_properties_of(level:int) -> void:
 	
 	load_changes(data.changes)
 	if "machines" in data:
-		GConfig.machines_included += data.machines
+		for machine in data.machines:
+			if not GConfig.machines_included.has(machine):
+				GConfig.machines_included.append(machine)
 
 func load_changes(changes:Dictionary):
 	for key in changes:
@@ -51,15 +53,10 @@ func load_changes(changes:Dictionary):
 
 func display(level:int) -> void:
 	var data := get_data_from_level(level)
-	print("Should display tutorial")
-	print(level)
-	print(data)
 	if data.keys().size() <= 0: 
 		await get_tree().process_frame
 		dismiss()
 		return
-	
-	print("Displaying tutorial")
 	
 	set_visible(true)
 	anim_player.stop(false)

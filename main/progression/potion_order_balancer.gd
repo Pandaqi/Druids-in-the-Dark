@@ -32,9 +32,6 @@ func on_timer_timeout() -> void:
 	var num_potions := get_tree().get_nodes_in_group("PotionsAndComponents").size()
 	var num_customers := get_tree().get_nodes_in_group("Customers").size()
 	
-	print("#potions", num_potions)
-	print("#customers", num_customers)
-	
 	var potion_diff : int = potion_bounds.max - num_potions
 	var customer_diff : int = customer_bounds.max - num_customers
 	

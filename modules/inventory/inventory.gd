@@ -44,6 +44,12 @@ func clear() -> void:
 
 func visualize():
 	
+	# give feedback audio, but only if possible (node exists)
+	if has_node("AudioStreamPlayer2D"): 
+		var audio_player : AudioStreamPlayer2D = $AudioStreamPlayer2D
+		audio_player.pitch_scale = randf_range(0.9, 1.1)
+		audio_player.play()
+	
 	# determine list of things based on display type
 	var list : Array[String] = items.duplicate(false)
 	

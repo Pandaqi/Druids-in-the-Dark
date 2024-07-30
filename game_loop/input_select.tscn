@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=3 uid="uid://chs7jt4nst5qn"]
+[gd_scene load_steps=4 format=3 uid="uid://chs7jt4nst5qn"]
 
 [ext_resource type="Script" path="res://game_loop/input_select.gd" id="1_3h3hg"]
 [ext_resource type="PackedScene" uid="uid://co18g8203lcjm" path="res://ui/player_select.tscn" id="1_xjqfa"]
+[ext_resource type="AudioStream" uid="uid://bl15u171vo85t" path="res://sound_fx/player_login.ogg" id="3_l2fd0"]
 
 [node name="InputSelect" type="Control"]
 layout_mode = 3
@@ -38,3 +39,7 @@ layout_mode = 2
 
 [node name="PlayerSelect4" parent="MarginContainer/HBoxContainer" instance=ExtResource("1_xjqfa")]
 layout_mode = 2
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_l2fd0")
+volume_db = -15.0

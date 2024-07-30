@@ -144,6 +144,125 @@ Some solutions were straightforward. For example: just place more garbage bins. 
 
 Some solutions were wacky or more complicated, but those are always the ones that feel most impactful and promising. For example: "The longer/more something is in shadow, the more likely it is to _mutate_ into something else." People change their orders, ingredients are suddenly something else, and you need to keep paying attention.
 
+### So?
 
+I implemented all those ideas (and a few more). Most were fine, some were bad. 
 
+I kept the fine ones and sorted them based on complexity to get "levels" (where one new rule is introduced for each level). This sort is also simply based on variety and not overwhelming players.
 
+Then I created the tutorial system that displays the image + text for this new rule, and modifies the required properties/numbers behind the scenes. (It's cumulative: the changes of the previous tutorial are kept, and the new one simply loads its own stuff on top of that.)
+
+The **biggest** realization (to keep the game simple, but already interesting from level 1) was to simply **make holes deadly**.
+
+* You can walk into them just fine.
+* But it will kill you.
+* And shadows hide these holes. (At the start/end of the game, all shadows are turned off, so you have a few seconds to see where everything is and what the map looks like.)
+
+This is very intuitive to most players. (Of course you die by falling into a pit, and a pit is just any place where there's no cell.)
+
+At the same time, this makes the game much more challenging and tense in a good way. You have to memorize the locations of cells, and not---in your panic or haste---accidentally walk into one.
+
+Now we finally had a core structure and progression to the game. That doesn't mean the game is any good: I need to playtest it myself and tweak loads of numbers.
+
+### Tweaking for fun
+
+I made maps slightly smaller than I originally intended, and had my algorithm take bigger bites out of it. (Otherwise, holes would be so tiny you could almost ignore them, or they'd only appear at the edges anyway.)
+
+I made the timer (for making new customers appear, new potions/ingredients, etcetera) _much_ faster.
+
+I made movement a bit slower by default. Otherwise, moving too fast both makes the game too easy (you can get anywhere you want at an instant), and also too annoying (you're far more likely to accidentally run into a hole with such movement). Also to allow _speed up_ powerups later to make sense.
+
+I added _more orders_ by default, right from the start. This increases the probability of being far away from an order, having to juggle multiple at the same time, and just felt like a better balance in terms of challenge.
+
+Of course there was a lot more tweaking, but those were _tiny_ changes to numbers or settings or whatever and not that interesting.
+
+## Polishing
+
+The usual suspects: Sound, Animation/Tweens, Particles, and Graphics in general. 
+
+### Sound
+
+The process was ...
+
+* Find royalty free sound effects (or create them myself, if I can)
+* Edit them _a lot_. (They always have wildly different volumes, lots of empty space at start/end, perhaps sections that I don't need, and they're almost always too SLOW.)
+* Plug them all into the game.
+
+My hardware is still too broken for any serious work on music or graphics. So I did all this in Audacity with quick destructive edits. 
+
+The soundtrack was done in Reaper with a mix of MIDI-input + a free Piano VST, recording my Egg Shakers with my laptop microphone, and using more royalty free sounds for subtle ambience and some sparkling here and there.
+
+Then my computer was done with it and I decided to stop the arrangement there. 
+
+As usual, I am a musician, so inventing a catchy melody happens easily. Some ambient looping sounds, some chords or shakers, and a very simple arrangement can sound fine. The biggest issue is actually recording/transfering those issues when your hardware is working against you every step of the way.
+
+No, wait, the biggest challenge was that _the home is being renovated_. I couldn't hear what the fudge I was doing. Volume balancing is hard enough as it is. (How loud should each sound be? How loud should game sounds be compared to background music? Sounds that repeat a lot should be much softer and a bit randomized, otherwise they're annoying. Single-instance sounds should be a bit louder than normal.) With drills and hammers all around you, this was a nightmare and I just gave it my best "guess" really.
+
+### Graphics
+
+In my Game Design Document, I stated that I'd get inspired by the visual style of _Lovers in a Dangerous Spacetime_. And I did! 
+
+Because I still had to draw new stuff completely myself, of course, the style ended up deviating more and more and becoming its own thing. I think the game looks quite nice, unique and consistent.
+
+I had to abandon any idea of glow/bloom, or lighting effects, or any more complexity. My own computer can't handle it, and if I can't make/play the game, then this all stops :p
+
+In fact, the game just has 3 small spritesheets, as that's the maximum my computer could take.
+
+* Elements => components, ingredients, machines
+* Misc => UI-stuff, player icons, any other "miscellaneous" things (such as a blurry circle for both player shadows and particle effects)
+* Tutorials => a very tiny spritesheet with ~20 tutorial images for each level
+
+### Animations/Tweens/Particles
+
+In Godot 4, tweens are a "fire-and-forget" thing, and that's one of the best improvements they ever did.
+
+All throughout the game, it takes 10 seconds to write a simple tween (pop up, fade in-out, wiggle) to respond to certain elements. If that's impossible, the AnimationPlayer is equally simple and powerful.
+
+I still have things that don't really react or are missing tweens, because I ran out of time. But I wrote them down on a "future to-do list", just in case.
+
+I do wish it was easier to animate Control/UI nodes in Godot. Now I'm _very_ restricted in how I can smoothly make those transition. (Such as when the Tutorial appears, I wanted a more splashy animation, but had to settle for a simple pop-up and fade-in-each-element-separately.) Still nice, not as nice as it could've been.
+
+Similarly, I have only a single particles scene: some fuzzy circles flying in different directions and fading away quickly (with lots of randomness). I re-use that when you do anything special, such as delivering an order. 
+
+It's always a few hours of "boring work", if you ask me. But the results simply can't be ignored. For those few hours, the game feels much more like an actual game, more responsive and alive. In fact, after adding the sound for "new customer arrived", I almost immediately shifted to exclusively relying on that recognizable bell when playtesting the game myself. That's how particles, feedback, and sound can also be incredibly useful/functional (despite being pretty or juicy).
+
+### Menus
+
+Especially in game jams, menus are barebones. I'm fine with that. My marketing image for the game already helps the main menu a lot, just by looking more detailed and pretty as opposed to the buttons :p
+
+I did spend some extra time on the input select screen. Both so that it's easy to use and clear, but also to prepare for future games.
+
+I _want_ to make more local multiplayer games again once I have a functioning computer. And to do so, I want a really strong input system that makes input selection and management easy. So I used this project to improve my own library and fix some things.
+
+(For example, in previous games, controls are all _fixed_. I'd create an image with WASD or the arrow keys and display that. This obviously isn't very flexible and stops working once I give a game reconfigurable controls---which is the next thing my input system should get, once I have time.)
+
+In the end, I think the menus are _fine_ and _functional_, but they could've had more love too if I had time. (At the same time, the non-game parts of this game look better and more polished than in some other games of mine, on which I worked much longer xD)
+
+## Conclusion
+
+Because I wanted to finish my current project first, and I forgot about time zones, I really only had 4 days for this one. That's not a lot. Especially not when you actually want to push yourself to make a worthwhile game (even after the jam).
+
+As such, once the game was finished ... I actually realized the _better_ ways to make it more fun. That's just how it goes. It takes time to try stuff, realize what your game is about, and finally get to the better ideas.
+
+For example, remember how I told you that "make holes kill you" was a simple rule that finally made the game work? Well, now I realize I should've obviously _expanded_ on that idea. (Instead of introducing other rules or ideas all the time.) 
+
+* I could've added tiles that break down over time. (Such as after walking over it X times, or being in shadow Y seconds.)
+* I could've moved them around in some predictable way.
+* I could've added powerups that gave more lives, or single-time protection against the holes, or a "see holes even in shadow"-bonus.
+* Etcetera
+
+The same thing with "movement". The entire game is _movement_ and how you go about it, so I should've done more variation on it, right? Perhaps moving in Tetris patterns was needed to create ingredients. Perhaps something would allow you to _jump_ over holes.
+
+All great ideas that probably would've been simpler to implement and created a better game. But that's how it goes. Only 4 days, jam is over, I have other work to do.
+
+I wrote all that in a future to-do list. I've actually become much better in recent years at coming back to projects (even after years) and giving them a great update in a few days. So maybe it will happen for this one too. There's a good core that _can_ become more, but it certainly doesn't feel _so promising_ that I'm ditching everything else to continue work on this game.
+
+{{% remark %}}
+Also because my hardware is still crap, so it's not ... very fun to work on games that aren't tiny anymore.
+{{% /remark %}}
+
+That's it for this devlog! Very short, no images or videos really to show. But I think the final game is _okay_. More importantly, I created _something_ and _send it_ to the jam, and that's really the only goal here.
+
+Keep playing,
+
+Pandaqi

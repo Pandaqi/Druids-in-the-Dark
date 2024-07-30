@@ -23,6 +23,7 @@ var boosted_component : String = ""
 
 @onready var potion_order_balancer = $PotionOrderBalancer
 @onready var dynamic_cell_spawner = $DynamicCellSpawner
+@onready var audio_player : AudioStreamPlayer = $AudioStreamPlayer
 
 signal new_level
 
@@ -104,8 +105,6 @@ func check_game_over():
 		GDict.game_over.emit(true)
 
 func on_game_over(we_win:bool):
-	print("Game Over!")
-	print("We win?", we_win)
 	end_level(we_win)
 
 func start_level() -> void:
@@ -123,6 +122,7 @@ func start_level() -> void:
 	countdown.appear()
 	await countdown.is_done
 	
+	audio_player.play()
 	shadows.set_global_shadow(true)
 	get_tree().paused = false
 
@@ -131,6 +131,7 @@ func end_level(we_win:bool) -> void:
 	make_garbage_bin_permanent()
 	if we_win: level += 1
 	game_over.appear(we_win, level)
+	audio_player.play()
 	get_tree().paused = true
 
 func make_garbage_bin_permanent():

@@ -42,6 +42,7 @@ func check_if_should_mutate() -> void:
 	if randf() > GConfig.mutate_prob: return
 	
 	reset()
+	cell.trigger_shadow_event()
 	cell.mutate()
 
 func check_if_should_disappear() -> void:
@@ -54,5 +55,6 @@ func check_if_should_disappear() -> void:
 	if not should_disappear: return
 	
 	reset()
+	cell.trigger_shadow_event()
 	cell.remove_element()
 	

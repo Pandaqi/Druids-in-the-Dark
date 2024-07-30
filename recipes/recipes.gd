@@ -16,26 +16,43 @@ func generate():
 	var elements := progression.get_available_elements()
 	var max_length := progression.get_potion_max_length()
 	
+	dict = {}
+	
 	var elements_needed := 0
 	for i in range(potions.size()):
-		var combo_length = i % max_length
+		var combo_length = (i % max_length) + 1
 		elements_needed += combo_length
+		dict[potions[i]] = []
 	
 	var num_per_element : int = ceil(float(elements_needed) / elements.size())
 	var all_elements : Array[String] = []
+	
+	# ensure they all appear at least once; otherwise, it's random
 	for elem in elements:
-		for i in range(num_per_element):
-			all_elements.append(elem)
+		all_elements.append(elem)
 	
+	while all_elements.size() < elements_needed:
+		all_elements.append(elements.pick_random())
+	
+	# To ENSURE all elements are used (no matter potion count/size)
+	# we actually keep looping through the potions until we've exhausted them all
+	# however, any surplus ones are added to existing potions already
 	all_elements.shuffle()
-	for i in range(potions.size()):
-		var combo_length := i % max_length
-		var slice_idx := all_elements.size() - combo_length - 1
-		var combo := all_elements.slice(slice_idx)
-		all_elements.resize(slice_idx + 1) # GDScript has no .splice like JS, so we need to manually forget about the elements we picked
+	var counter := 0
+	while all_elements.size() > 0:
+		var potion_num := counter % potions.size()
+		var combo_length : int = min( (counter % max_length) + 1, all_elements.size() )
+		var combo := all_elements.slice(0, combo_length)
 		combo.sort() # nice consistent order that also matches inventory
-		dict[potions[i]] = combo
+		
+		# GDScript has no .splice like JS, so we need to manually forget about the elements we picked
+		for i in range(combo_length):
+			all_elements.pop_front()
+
+		dict[potions[potion_num]] += combo
+		counter += 1
 	
+	print("Recipe Dict")
 	print(dict)
 	GConfig.recipes_available = dict
 
@@ -68,11 +85,12 @@ func count() -> int:
 	return dict.keys().size()
 
 func on_order_delivered(comps:Array[String], time_left:float):
-	progression.check_game_over()
-	
 	# time_left is fraction between 0 and 1; less means you were slower, so fewer points
 	var score := comps.size() * 10 * time_left
 	GDict.scored.emit(score)
+	
+	# this should come LAST of course, otherwise we go game over before finishing the rest!
+	progression.check_game_over()
 
 func select_potion_that_includes(potions:Array[String], comp:String) -> String:
 	var suitable_potions : Array[String] = []

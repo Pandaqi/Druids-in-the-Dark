@@ -1,22 +1,35 @@
-[gd_scene load_steps=18 format=3 uid="uid://doo8wo6x48f0n"]
+[gd_scene load_steps=25 format=3 uid="uid://doo8wo6x48f0n"]
 
 [ext_resource type="Script" path="res://modules/visuals.gd" id="1_fbtq4"]
 [ext_resource type="Script" path="res://players/player/player.gd" id="1_q6yen"]
 [ext_resource type="Script" path="res://modules/input.gd" id="2_allid"]
 [ext_resource type="Script" path="res://modules/grid_mover.gd" id="3_5ayq0"]
+[ext_resource type="AudioStream" uid="uid://7qhkfw15npr7" path="res://sound_fx/movement.ogg" id="5_jn8i1"]
 [ext_resource type="Script" path="res://modules/player_interactor.gd" id="6_ro2hm"]
 [ext_resource type="Script" path="res://modules/potion_breaker.gd" id="7_5maq8"]
+[ext_resource type="AudioStream" uid="uid://c4anvldfpfoey" path="res://sound_fx/inventory.ogg" id="7_26chh"]
 [ext_resource type="Script" path="res://modules/order_giver.gd" id="8_j2uu7"]
 [ext_resource type="Script" path="res://modules/inventory/inventory.gd" id="9_u3cna"]
 [ext_resource type="Script" path="res://modules/recipe_reader.gd" id="10_dkre7"]
 [ext_resource type="Script" path="res://modules/element_grabber.gd" id="11_ek5mr"]
+[ext_resource type="AudioStream" uid="uid://bmaux18bmxvkj" path="res://sound_fx/potion_break.ogg" id="11_rq13f"]
 [ext_resource type="Script" path="res://modules/element_dropper.gd" id="12_txocr"]
 [ext_resource type="Script" path="res://modules/wildcard_reader.gd" id="13_b2fq6"]
 [ext_resource type="Script" path="res://modules/player_shadow.gd" id="13_bqttd"]
+[ext_resource type="AudioStream" uid="uid://2iv0a1pmq2ht" path="res://sound_fx/delivery.ogg" id="13_i0dy8"]
 [ext_resource type="Texture2D" uid="uid://d1hbyhc7hnmuy" path="res://main/misc.webp" id="14_8f2d5"]
 [ext_resource type="Script" path="res://modules/effects_tracker.gd" id="15_jmh15"]
+[ext_resource type="PackedScene" uid="uid://emaoe74fpka6" path="res://players/particles.tscn" id="15_nm26w"]
 [ext_resource type="Script" path="res://modules/teleporter.gd" id="17_052po"]
 [ext_resource type="Script" path="res://modules/spike_killer.gd" id="18_rybhn"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tmx2l"]
+atlas = ExtResource("14_8f2d5")
+region = Rect2(0, 0, 512, 512)
+
+[sub_resource type="Gradient" id="Gradient_5fk5i"]
+offsets = PackedFloat32Array(0, 0.462006, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
 
 [node name="Player" type="Node2D" groups=["Players"]]
 script = ExtResource("1_q6yen")
@@ -33,6 +46,20 @@ vframes = 3
 [node name="Visuals" type="Node2D" parent="."]
 script = ExtResource("1_fbtq4")
 
+[node name="MovementParticles" type="CPUParticles2D" parent="Visuals"]
+modulate = Color(5, 5, 5, 0.67)
+position = Vector2(0, 50)
+amount = 24
+lifetime = 0.5
+texture = SubResource("AtlasTexture_tmx2l")
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 50.0
+initial_velocity_max = 90.0
+scale_amount_min = 0.03
+scale_amount_max = 0.15
+color_ramp = SubResource("Gradient_5fk5i")
+
 [node name="Sprite2D" type="Sprite2D" parent="Visuals"]
 modulate = Color(1, 1, 1, 0.784314)
 scale = Vector2(0.33, 0.33)
@@ -41,9 +68,19 @@ hframes = 4
 vframes = 3
 frame = 4
 
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Visuals"]
+stream = ExtResource("5_jn8i1")
+volume_db = -18.0
+max_distance = 5000.0
+
 [node name="Inventory" type="Node2D" parent="."]
 script = ExtResource("9_u3cna")
 wrap_after_cols = 2
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Inventory"]
+stream = ExtResource("7_26chh")
+volume_db = -6.0
+max_distance = 3500.0
 
 [node name="Input" type="Node" parent="."]
 script = ExtResource("2_allid")
@@ -54,11 +91,26 @@ script = ExtResource("3_5ayq0")
 [node name="PlayerInteractor" type="Node" parent="."]
 script = ExtResource("6_ro2hm")
 
-[node name="PotionBreaker" type="Node" parent="."]
+[node name="PotionBreaker" type="Node2D" parent="."]
 script = ExtResource("7_5maq8")
 
-[node name="OrderGiver" type="Node" parent="."]
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="PotionBreaker"]
+stream = ExtResource("11_rq13f")
+max_distance = 5000.0
+
+[node name="DefaultParticles" parent="PotionBreaker" instance=ExtResource("15_nm26w")]
+emitting = false
+
+[node name="OrderGiver" type="Node2D" parent="."]
 script = ExtResource("8_j2uu7")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="OrderGiver"]
+process_mode = 3
+stream = ExtResource("13_i0dy8")
+max_distance = 5000.0
+
+[node name="DefaultParticles" parent="OrderGiver" instance=ExtResource("15_nm26w")]
+emitting = false
 
 [node name="RecipeReader" type="Node" parent="."]
 script = ExtResource("10_dkre7")

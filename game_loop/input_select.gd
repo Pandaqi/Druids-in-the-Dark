@@ -6,6 +6,7 @@ extends Control
 	$MarginContainer/HBoxContainer/PlayerSelect3,
 	$MarginContainer/HBoxContainer/PlayerSelect4,
 ]
+@onready var audio_player : AudioStreamPlayer = $AudioStreamPlayer
 
 func _ready():
 	for i in range(nodes.size()):
@@ -27,10 +28,12 @@ func on_player_readied() -> void:
 func _input(ev):
 	var res_add = GInput.check_new_player(ev)
 	if not res_add.failed:
+		audio_player.play()
 		refresh_nodes()
 	
 	var res_remove = GInput.check_remove_player(ev)
 	if not res_remove.failed:
+		audio_player.play()
 		refresh_nodes()
 
 func refresh_nodes() -> void:

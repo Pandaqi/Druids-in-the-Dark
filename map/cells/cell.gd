@@ -19,6 +19,8 @@ var machine = null
 @export var element_scene : PackedScene
 @onready var floor_sprite = $Floor
 @onready var shadow_time_tracker : ModuleShadowTimeTracker = $ShadowTimeTracker
+@onready var shadow_event_player : AudioStreamPlayer2D = $ShadowEventPlayer
+@onready var shadow_event_particles : CPUParticles2D = $ShadowEventParticles
 
 signal shadow_changed(val:bool)
 
@@ -47,12 +49,18 @@ func has_player(p:Player) -> bool:
 func add_player(p:Player) -> bool:
 	if has_player(p): return false
 	players.append(p)
+	on_player_entered(p)
 	return true
 
 func remove_player(p:Player) -> bool:
 	if not has_player(p): return false
 	players.erase(p)
 	return true
+
+
+func on_player_entered(p:Player) -> void:
+	if get_machine_type():
+		machine_node.play_tween()
 
 ### Element management
 func get_element() -> CellElement:
@@ -84,6 +92,12 @@ func mutate() -> void:
 	remove_element()
 	add_element(GDict.get_random_mutation())
 	GDict.feedback.emit(get_position(), "Mutate!")
+
+func trigger_shadow_event() -> void:
+	shadow_event_player.pitch_scale = randf_range(0.9, 1.1)
+	shadow_event_player.play()
+	
+	shadow_event_particles.play()
 
 ### Machine management
 func get_machine_type() -> String:

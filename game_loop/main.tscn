@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://h73dtaf2hvjv"]
+[gd_scene load_steps=30 format=3 uid="uid://h73dtaf2hvjv"]
 
 [ext_resource type="Script" path="res://map/map.gd" id="1_ece51"]
 [ext_resource type="Script" path="res://main/main.gd" id="1_kh0sr"]
@@ -15,9 +15,11 @@
 [ext_resource type="Script" path="res://tutorial/tutorial.gd" id="12_prlpa"]
 [ext_resource type="Texture2D" uid="uid://bdotp6kytn80x" path="res://icon.svg" id="12_uogpg"]
 [ext_resource type="Script" path="res://tutorial/countdown.gd" id="12_yykam"]
+[ext_resource type="AudioStream" uid="uid://bawt1oseqsps3" path="res://sound_fx/level_start_stop.ogg" id="13_wievp"]
 [ext_resource type="Script" path="res://main/game_over.gd" id="15_f10ch"]
 [ext_resource type="FontFile" uid="uid://dtf04jykdlyhg" path="res://ui/fonts/body_regular.ttf" id="16_s4q65"]
 [ext_resource type="Theme" uid="uid://c0bfo1n4w7tgt" path="res://ui/default_theme.tres" id="16_ugln2"]
+[ext_resource type="AudioStream" uid="uid://by15t7kthofje" path="res://sound_fx/countdown_tick.ogg" id="16_wan5s"]
 [ext_resource type="FontFile" uid="uid://djjeqfetr54ar" path="res://ui/fonts/heading.TTF" id="17_wkjik"]
 [ext_resource type="FontFile" uid="uid://battax6vsqqxm" path="res://ui/fonts/body_bold.ttf" id="18_amqjc"]
 [ext_resource type="Texture2D" uid="uid://belshgxot58hl" path="res://ui/nine_patch_atlas.tres" id="20_igie5"]
@@ -230,6 +232,11 @@ script = ExtResource("11_672sa")
 
 [node name="Timer" type="Timer" parent="Progression/DynamicCellSpawner"]
 
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Progression"]
+process_mode = 3
+stream = ExtResource("13_wievp")
+volume_db = -8.0
+
 [node name="Countdown" type="CanvasLayer" parent="."]
 process_mode = 3
 script = ExtResource("12_yykam")
@@ -268,6 +275,10 @@ theme_override_font_sizes/font_size = 128
 text = "1"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Countdown"]
+stream = ExtResource("16_wan5s")
+volume_db = -14.0
 
 [node name="Tutorial" type="CanvasLayer" parent="."]
 process_mode = 3

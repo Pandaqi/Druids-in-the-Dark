@@ -1,5 +1,6 @@
 class_name ModuleOrder extends Node2D
 
+@onready var audio_player : AudioStreamPlayer2D = $AudioStreamPlayer2D
 @onready var timer : Timer = $Timer
 @onready var inventory : ModuleInventory = $Inventory
 @onready var cell_element : CellElement = get_parent()
@@ -16,6 +17,7 @@ func add_recipe(r:String) -> void:
 	self.add_to_group("Customers")
 	inventory.add_content(r)
 	start_timer()
+	audio_player.play()
 
 func get_order() -> Array[String]:
 	return inventory.get_content()

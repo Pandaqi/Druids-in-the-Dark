@@ -1,7 +1,10 @@
 class_name ModuleVisuals extends Node2D
 
-@onready var sprite = $Sprite2D
+@onready var sprite : Sprite2D = $Sprite2D
 @onready var entity = get_parent()
+@onready var audio_player : AudioStreamPlayer2D = $AudioStreamPlayer2D
+@onready var movement_particles : CPUParticles2D = $MovementParticles
+
 var moving : bool = false
 var movement_duration := GConfig.def_move_tween_duration
 
@@ -13,14 +16,21 @@ func activate(player_num: int, grid_mover:ModuleGridMover, effects_tracker:Modul
 	grid_mover.position_updated.connect(on_position_updated)
 	effects_tracker.effects_changed.connect(on_effects_changed)
 	movement_done.connect(grid_mover.on_movement_done)
+	
+	movement_particles.set_emitting(false)
 
 func on_position_updated(real_pos:Vector2, instant:bool):
 	moving = true
+	movement_particles.set_emitting(true)
 	
 	if instant:
 		entity.set_position(real_pos)
 		on_movement_done()
 		return
+	
+	
+	audio_player.pitch_scale = randf_range(0.9, 1.0)
+	audio_player.play()
 	
 	var tw := get_tree().create_tween()
 	tw.tween_property(entity, "position", real_pos, movement_duration)
@@ -35,6 +45,7 @@ func on_position_updated(real_pos:Vector2, instant:bool):
 func on_movement_done():
 	moving = false
 	movement_done.emit()
+	movement_particles.set_emitting(false)
 
 func change_speed(factor:float):
 	var base_val := GConfig.def_move_tween_duration

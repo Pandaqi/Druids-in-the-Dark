@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://emaoe74fpka6"]
+
+[ext_resource type="Texture2D" uid="uid://d1hbyhc7hnmuy" path="res://main/misc.webp" id="1_ixpk5"]
+[ext_resource type="Script" path="res://players/particles.gd" id="2_bjv12"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tmx2l"]
+atlas = ExtResource("1_ixpk5")
+region = Rect2(0, 0, 512, 512)
+
+[sub_resource type="Gradient" id="Gradient_5fk5i"]
+offsets = PackedFloat32Array(0, 0.462006, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[node name="DefaultParticles" type="CPUParticles2D"]
+modulate = Color(5, 5, 5, 1)
+amount = 24
+lifetime = 0.5
+explosiveness = 1.0
+texture = SubResource("AtlasTexture_tmx2l")
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 150.0
+initial_velocity_max = 250.0
+scale_amount_min = 0.03
+scale_amount_max = 0.15
+color_ramp = SubResource("Gradient_5fk5i")
+script = ExtResource("2_bjv12")
