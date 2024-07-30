@@ -101,7 +101,7 @@ func visualize():
 			node.set_position(cur_pos)
 			cur_pos += Vector2(offset_per_item.x, 0)
 			
-			var wrap_line = (i+1) % wrap_after_cols == 0
+			var wrap_line = num_rows > 1 and (i+1) % wrap_after_cols == 0
 			if wrap_line:
 				cur_pos = Vector2(offset_all_items.x, cur_pos.y + offset_per_item.y)
 			

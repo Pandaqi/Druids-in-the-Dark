@@ -25,6 +25,7 @@ var boosted_component : String = ""
 @onready var dynamic_cell_spawner = $DynamicCellSpawner
 @onready var audio_player : AudioStreamPlayer = $AudioStreamPlayer
 
+signal level_ended
 signal new_level
 
 func activate(m:Map, t:Tutorial, c:Countdown, s:Shadows, g:GameOver, p:Players, recipes:Recipes):
@@ -63,7 +64,7 @@ func generate():
 	
 	# determine the exact number of them in each round
 	num_elements_order = fill_order_list(range(2,all_elements_order.size()))
-	num_potions_order = fill_order_list(range(2,all_potions_order.size()))
+	num_potions_order = fill_order_list(range(1,all_potions_order.size()), GConfig.prog_potions_num_before_start)
 	potion_max_length_order = fill_order_list(range(2,6))
 	
 	var num_customers_bounds = GConfig.prog_def_num_total_customers_bounds.duplicate(true)
@@ -72,8 +73,11 @@ func generate():
 	num_customers_bounds.max = round(num_customers_bounds.max * num_customers_scalar)
 	num_customers_order = fill_order_list(range(num_customers_bounds.min, num_customers_bounds.max))
 
-func fill_order_list(num_range) -> Array[int]:
+func fill_order_list(num_range, fill_before : int = 0) -> Array[int]:
 	var arr : Array[int] = []
+	
+	for i in range(fill_before):
+		arr.append(num_range.front())
 	
 	# create a staggered list with random skips before it jumps up again
 	for i in num_range:
@@ -125,10 +129,17 @@ func start_level() -> void:
 	audio_player.play()
 	shadows.set_global_shadow(true)
 	get_tree().paused = false
+	
+	potion_order_balancer.restart()
+	dynamic_cell_spawner.restart()
 
 func end_level(we_win:bool) -> void:
 	shadows.set_global_shadow(false)
 	make_garbage_bin_permanent()
+	
+	potion_order_balancer.on_level_ended()
+	dynamic_cell_spawner.on_level_ended()
+	
 	if we_win: level += 1
 	game_over.appear(we_win, level)
 	audio_player.play()

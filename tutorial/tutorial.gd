@@ -13,7 +13,7 @@ signal dismissed()
 
 func _input(ev):
 	if not active: return
-	if ev.is_action_released("interact_-1_0") or ev.is_action_released("interact_0_0"):
+	if ev.is_action_released("game_over_restart"):
 		dismiss()
 
 func dismiss():

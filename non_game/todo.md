@@ -11,7 +11,9 @@
   * Yeah, I have some GREAT ideas for better holes + movement stuff at the END of the devlog
 * Settings + Rebindable controls
 * A permanent icon to display if your non-interactive or not => Maybe smaller feedback elements to reveal what ingredients do (as bonuses/curses once delivered)
-
+* On multiplayer, one player can do the "back-and-forth" between order cells to keep extending their timer.
+  * THis isn't too bad, because it still turns everything in that area into shadow (you can't see how much time left, or what they even wanted)
+  * And because this only works if they're really close and that person isn't needed elsewhere, so MEH.
 
 # DISCARDED IDEAS
 
@@ -29,6 +31,3 @@ RULES KEPT OFF PERMANENTLY (for now):
 "recipe_book_visit_changes_recipes": false,
 "potion_delivery_regenerates_recipe": false,
 "recipe_book_dynamic_read_dir": false
-
-
-"shadow_mechanic_delivery"

@@ -3,21 +3,26 @@ class_name ModuleOrder extends Node2D
 @onready var audio_player : AudioStreamPlayer2D = $AudioStreamPlayer2D
 @onready var timer : Timer = $Timer
 @onready var inventory : ModuleInventory = $Inventory
-@onready var cell_element : CellElement = get_parent()
 @onready var cell : Cell = get_parent().get_parent()
 var tween_occupied : Tween
 var visited := false
 
 func _ready():
-	
 	if GConfig.order_only_visible_after_visit:
 		inventory.set_visible(false)
 
 func add_recipe(r:String) -> void:
-	self.add_to_group("Customers")
+	add_to_group("Customers")
 	inventory.add_content(r)
 	start_timer()
 	audio_player.play()
+
+func remove_recipe():
+	if tween_occupied: tween_occupied.kill()
+	cell.machine_node.stop_loop_tween()
+	inventory.clear()
+	remove_from_group("Customers")
+	cell.floor_sprite.set_scale(Vector2.ONE)
 
 func get_order() -> Array[String]:
 	return inventory.get_content()
@@ -32,11 +37,15 @@ func start_timer() -> void:
 		timer.timeout.connect(on_timer_timeout)
 		timer.start()
 	
-	tween_occupied = get_tree().create_tween()
-	var dur = 0.75
-	tween_occupied.tween_property(cell_element, "scale", 0.7*Vector2.ONE, dur)
-	tween_occupied.tween_property(cell_element, "scale", 1.0*Vector2.ONE, dur)
-	tween_occupied.set_loops(1000)
+	cell.machine_node.play_loop_tween()
+	
+	# @DEBUGGING
+	#tween_occupied = get_tree().create_tween()
+	#var dur = 0.75
+	#var cell_element = get_parent()
+	#tween_occupied.tween_property(cell_element, "scale", 0.7*Vector2.ONE, dur)
+	#tween_occupied.tween_property(cell_element, "scale", 1.0*Vector2.ONE, dur)
+	#tween_occupied.set_loops(1000)
 
 func change_timer(dt:float) -> void:
 	if not GConfig.orders_are_timed: return
@@ -60,13 +69,11 @@ func update_progress_bar() -> void:
 	cell.floor_sprite.set_scale(timer_left * Vector2.ONE)
 
 func finish() -> void:
-	tween_occupied.kill()
-	inventory.clear()
-	remove_from_group("Customers")
-	cell.floor_sprite.set_scale(Vector2.ONE)
+	remove_recipe()
 
 func on_timer_timeout() -> void:
 	finish()
+	cell.floor_sprite.set_scale(Vector2.ZERO) # to help player realize this is why they lost
 	GDict.feedback.emit(cell.get_position(), "Too Late!")
 	GDict.game_over.emit(false)
 

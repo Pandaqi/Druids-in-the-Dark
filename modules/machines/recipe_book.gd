@@ -15,8 +15,12 @@ func change_index(di:int) -> void:
 	if di != 0:
 		audio_player.play()
 	
-	var cur_recipe = GConfig.recipes_available.keys()[cur_index]
-	set_visible_recipe([cur_recipe], GConfig.recipes_available[cur_recipe])
+	var cur_recipe_name = GConfig.recipes_available.keys()[cur_index]
+	var cur_recipe_comps : Array[String] = []
+	for elem in GConfig.recipes_available[cur_recipe_name]:
+		cur_recipe_comps.append(elem as String)
+	
+	set_visible_recipe([cur_recipe_name], cur_recipe_comps)
 
 func set_visible_recipe(recipe_key:Array[String], recipe_components:Array[String]) -> void:
 	inventory_high.set_content(recipe_components)

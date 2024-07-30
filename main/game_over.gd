@@ -50,9 +50,11 @@ func _input(ev):
 	if not active: return
 	if ev.is_action_released("game_over_restart"):
 		on_continue_pressed()
+		return
 	
 	if ev.is_action_released("game_over_back"):
 		on_back_pressed()
+		return
 
 func on_continue_pressed():
 	if we_won:
@@ -60,7 +62,9 @@ func on_continue_pressed():
 		progression.start_level()
 	
 	if not we_won or run_is_over:
+		get_tree().paused = false
 		get_tree().reload_current_scene()
 
 func on_back_pressed():
+	get_tree().paused = false
 	get_tree().change_scene_to_file("res://game_loop/menu.tscn")

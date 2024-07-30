@@ -36,6 +36,7 @@ func reset():
 	for i in range(num_players):
 		var pos = starting_cells[i].pos
 		players[i].grid_mover.update_position(pos, true)
+		players[i].visuals.reset()
 	
 	# Don't reset anything else?? Actually makes sense ...
 	

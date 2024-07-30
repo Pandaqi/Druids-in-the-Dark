@@ -21,6 +21,8 @@ func activate(player_num: int, grid_mover:ModuleGridMover, effects_tracker:Modul
 
 func on_position_updated(real_pos:Vector2, instant:bool):
 	moving = true
+	
+	movement_particles.set_visible(true)
 	movement_particles.set_emitting(true)
 	
 	if instant:
@@ -58,3 +60,8 @@ func on_effects_changed(eff:Array[String]) -> void:
 		var data = GDict.get_element_data(elem)
 		if data.effect == "speed_plus": change_speed(2.0)
 		elif data.effect == "speed_min": change_speed(0.5)
+
+func reset():
+	movement_particles.restart()
+	movement_particles.set_emitting(false)
+	movement_particles.set_visible(false)

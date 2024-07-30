@@ -52,6 +52,10 @@ func generate():
 		dict[potions[potion_num]] += combo
 		counter += 1
 	
+	# SOMEHOW, very rarely, this thing is empty; safeguard against that
+	if dict.keys().size() <= 0:
+		dict[GDict.POTIONS.keys().pick_random()] = GDict.ELEMENTS.keys().slice(0,3)
+	
 	print("Recipe Dict")
 	print(dict)
 	GConfig.recipes_available = dict

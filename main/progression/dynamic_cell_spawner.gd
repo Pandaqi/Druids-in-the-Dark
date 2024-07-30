@@ -5,10 +5,14 @@ var map : Map
 
 func activate(m:Map) -> void:
 	self.map = m
-	
+	timer.timeout.connect(on_timer_timeout)
+
+func on_level_ended():
+	timer.stop()
+
+func restart():
 	var tick_dur = GConfig.def_dynamic_spawner_tick * GConfig.dynamic_spawner_tick_scalar[GInput.get_player_count()]
 	timer.wait_time = tick_dur
-	timer.timeout.connect(on_timer_timeout)
 	timer.start()
 
 func on_timer_timeout() -> void:

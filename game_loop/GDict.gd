@@ -45,9 +45,9 @@ const PLAYER_COLORS : Array[Color] = [
 # With breaks between the tiers to prevent overwhelming the player / provide some sort of "intermediary boss"
 const TUTORIAL_ORDER : Array[String] = [
 	"objective", 
-	"orders_core", "potions_core", "shadow_mechanic_filter", "machine_recipe_book", "machine_garbage_bin", "",
-	"orders_medium", "potions_medium", "shadow_mechanic_mutate", "machine_wildcard", "machine_spikes", "",
-	"orders_advanced", "potions_advanced", "shadow_mechanic_delivery", "machine_teleport", "machine_garbage_bin_advanced", "", ""
+	"orders_core", "potions_core", "max_map_fullness", "machine_wildcard", "machine_garbage_bin", "shadow_mechanic_filter", "",
+	"orders_medium", "potions_medium", "shadow_mechanic_mutate", "machine_recipe_book", "machine_spikes", "",
+	"orders_advanced", "potions_advanced", "shadow_mechanic_delivery", "machine_teleport", "machine_garbage_bin_advanced", ""
 ]
 
 # When the level first starts, it sets all variables to TUTORIALS.default
@@ -95,6 +95,11 @@ const TUTORIALS : Dictionary = {
 			"customers_want_components": true,
 			"wrong_order_is_garbage": true
 		}
+	},
+	
+	"max_map_fullness": {
+		"desc": "The map will only spawn a [b]limited number[/b] of things. Don't get what you need? [b]Throw away[/b] what's there first!",
+		"changes": {}
 	},
 	
 	"orders_core": {

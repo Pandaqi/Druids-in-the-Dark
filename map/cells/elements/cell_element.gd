@@ -2,6 +2,7 @@ class_name CellElement extends Node2D
 
 var type : String
 @onready var sprite : Sprite2D = $Sprite2D
+@onready var anim_player : AnimationPlayer = $AnimationPlayer
 
 func _ready():
 	sprite.set_scale(GConfig.def_cell_element_scale * Vector2.ONE)
@@ -26,9 +27,14 @@ func is_dynamic() -> bool:
 	return type in GDict.MACHINES and GDict.MACHINES[type].dynamic
 
 func play_tween() -> void:
+	if GConfig.debug_disable_tweens: return
 	var tw = get_tree().create_tween()
 	var cur_scale = self.scale
 	tw.tween_property(self, "scale", 1.2*cur_scale, 0.1)
 	tw.tween_property(self, "scale", cur_scale, 0.2)
-	
-	
+
+func play_loop_tween():
+	anim_player.play("loop_tween")
+
+func stop_loop_tween():
+	anim_player.stop()

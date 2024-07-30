@@ -4,6 +4,10 @@ var pos : Vector2i = Vector2i.ZERO
 var disabled : bool = false
 var shadow : bool = false
 
+var floor_tween : Tween
+var element_tween : Tween
+var machine_tween : Tween
+
 # cells can hold any number of players ( = moving entities)
 var players : Array[Player] = []
 
@@ -78,10 +82,11 @@ func add_element(e:String) -> void:
 	
 	shadow_time_tracker.reset()
 	
-	node.set_scale(1.1*Vector2.ONE)
-	var tw = get_tree().create_tween()
-	tw.tween_property(node, "scale", Vector2.ONE, 0.15)
-	tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	if not GConfig.debug_disable_tweens:
+		node.set_scale(1.1*Vector2.ONE)
+		var tw = get_tree().create_tween()
+		tw.tween_property(node, "scale", Vector2.ONE, 0.15)
+		tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 
 func remove_element() -> void:
 	element.queue_free()
@@ -111,10 +116,11 @@ func add_machine(type:String) -> void:
 	node.set_type(type) 
 	machine_node = node
 	
-	node.set_scale(1.1*Vector2.ONE)
-	var tw = get_tree().create_tween()
-	tw.tween_property(node, "scale", Vector2.ONE, 0.15)
-	tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	if not GConfig.debug_disable_tweens:
+		node.set_scale(1.1*Vector2.ONE)
+		var tw = get_tree().create_tween()
+		tw.tween_property(node, "scale", Vector2.ONE, 0.15)
+		tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	
 	var module_scene = load(GDict.MACHINES[type].module_scene)
 	if module_scene:
@@ -123,10 +129,14 @@ func add_machine(type:String) -> void:
 		machine = mod
 
 func remove_machine() -> void:
-	if machine.has_method("finish"): machine.finish()
+	# must come before machine_node deletion
+	if machine:
+		if machine.has_method("finish"): machine.finish()
+		machine.queue_free()
+		machine = null
+	
 	machine_node.queue_free() # `machine` module automatically dies too because it's child of this
 	machine_type = ""
-	machine = null
 
 func is_empty() -> bool:
 	return (not get_element()) and count_players() <= 0 and get_machine_type() == ""
@@ -150,19 +160,41 @@ func set_shadow(val:bool) -> void:
 	var tween_dur = 0.1
 	
 	if GConfig.disabled_cells_kill_you:
-		floor_sprite.modulate.a = start_alpha
-		var tw = get_tree().create_tween()
-		tw.tween_property(floor_sprite, "modulate:a", end_alpha, tween_dur)
-		tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+		if GConfig.debug_disable_tweens:
+			floor_sprite.modulate.a = end_alpha
+		else:
+			floor_sprite.modulate.a = start_alpha
+			var tw = get_tree().create_tween()
+			tw.tween_property(floor_sprite, "modulate:a", end_alpha, tween_dur)
+			tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+			floor_tween = tw
 	
 	if element: 
-		element.modulate.a = start_alpha
-		var tw = get_tree().create_tween()
-		tw.tween_property(element, "modulate:a", end_alpha, tween_dur)
-		tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+		if GConfig.debug_disable_tweens:
+			element.modulate.a = end_alpha
+		else:
+			element.modulate.a = start_alpha
+			var tw = get_tree().create_tween()
+			tw.tween_property(element, "modulate:a", end_alpha, tween_dur)
+			tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+			element_tween = tw
 	
 	if machine_type: 
-		machine_node.modulate.a = start_alpha
-		var tw = get_tree().create_tween()
-		tw.tween_property(machine_node, "modulate:a", end_alpha, tween_dur)
-		tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+		if GConfig.debug_disable_tweens:
+			machine_node.modulate.a = end_alpha
+		else:
+			machine_node.modulate.a = start_alpha
+			var tw = get_tree().create_tween()
+			tw.tween_property(machine_node, "modulate:a", end_alpha, tween_dur)
+			tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+			machine_tween = tw
+
+func kill():
+	if floor_tween: floor_tween.kill()
+	if element_tween: element_tween.kill()
+	if machine_tween: machine_tween.kill()
+	
+	if element: remove_element()
+	if machine_type: remove_machine()
+	
+	self.queue_free()

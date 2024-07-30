@@ -19,7 +19,7 @@ func activate(prog:Progression, p:Players, r: Recipes) -> void:
 func regenerate() -> void:
 	# delete old
 	for cell in grid:
-		cell.queue_free()
+		cell.kill()
 	
 	# determine proper size
 	var raw_size : Vector2 = Vector2(GConfig.def_map_size)
@@ -157,6 +157,10 @@ func assign_machines() -> void:
 		for _i in range(freq_dict[elem]):
 			var cell = valid_cells.pop_back()
 			cell.add_machine(elem)
+
+			if elem == "wildcard": 
+				print("Should set wildcard")
+				cell.machine.set_visible_wildcard(recipes.wildcard)
 	
 func visualize_grid() -> void:
 	for cell in grid:
@@ -215,7 +219,7 @@ func get_bounds() -> Rect2:
 	)
 
 func on_map_shuffle_requested():
-	var machine_cells : Array[Cell] = query_cells({ "machine": ["recipe_book", "garbage_bin", "wildcard", "spikes", "planter"] })
+	var machine_cells : Array[Cell] = query_cells({ "machine": ["recipe_book", "garbage_bin", "spikes", "planter"] })
 	var allowed_cells : Array[Cell] = query_cells({ "shadow": false, "empty": true, "num": machine_cells.size() })
 	
 	for cell in machine_cells:

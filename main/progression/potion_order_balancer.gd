@@ -11,10 +11,14 @@ var wanted_potions : Array[String] = []
 func activate(m:Map, r:Recipes):
 	self.map = m
 	self.recipes = r
-	
+	timer.timeout.connect(on_timer_timeout)
+
+func on_level_ended():
+	timer.stop()
+
+func restart():
 	var prog_tick = GConfig.def_prog_tick * GConfig.prog_tick_scalar[GInput.get_player_count()]
 	timer.wait_time = prog_tick
-	timer.timeout.connect(on_timer_timeout)
 	timer.start()
 
 # @NOTE: "potion" just means any collectible (potion/component); this is a nasty consequence of changing the game's rules all the time through development

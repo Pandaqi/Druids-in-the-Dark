@@ -25,6 +25,7 @@ func on_cell_entered(cell:Cell):
 	var components = recipes.get_components_for(elem.type)
 	
 	if GConfig.potion_garbage_can_appear and randf() <= GConfig.potion_garbage_prob:
+		components.pop_back()
 		components.append(GDict.get_random_mutation())
 	
 	# distribute over valid cells

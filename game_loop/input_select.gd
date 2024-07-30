@@ -12,6 +12,7 @@ func _ready():
 	for i in range(nodes.size()):
 		nodes[i].init(i)
 		nodes[i].readied_up.connect(on_player_readied)
+		nodes[i].deactivate() # first need a clean slate with all deactivated, for proper activation of players already logged in
 	refresh_nodes()
 
 func on_player_readied() -> void:

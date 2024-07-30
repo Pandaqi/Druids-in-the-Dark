@@ -4,6 +4,7 @@ extends Node
 # DEBUGGING
 #
 var debug_starting_level := -1
+var debug_disable_tweens := false
 
 #
 # MISC
@@ -74,6 +75,8 @@ var garbage_bin_content_is_permanent := false
 var boosted_component_factor := 4.0 # they are "4x more likely" than others
 var prog_max_planter_cells := 8
 
+var prog_potions_num_before_start := 2 # it takes a while before potions start ticking up, otherwise we start with way too many potions outright => especially with recipe book moved back
+
 #
 # MOVEMENT
 #
@@ -134,7 +137,7 @@ var customers_want_potions := false
 var customer_want_potion_prob := 0.33
 
 var customer_visit_delays_timer := true
-var customer_timer_delay_scalar := 0.35 # multiplied by average order time
+var customer_timer_delay_scalar := 0.425 # multiplied by average order time
 
 var order_only_visible_after_visit := false # you must first "ask what they want" by visiting
 
