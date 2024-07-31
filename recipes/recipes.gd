@@ -63,9 +63,12 @@ func generate():
 func generate_wildcard():
 	if not GConfig.wildcard_include: return
 	
+	# @NOTE: this is in SEQUENCE now, so you can actually work with it on the fly
+	# picking a random one can lead to really unfair situations where wildcard is just a meh addition
 	var components := progression.get_available_elements()
-	components.erase(wildcard) # don't allow re-picking the current one; has to CHANGE
-	wildcard = components.pick_random()
+	var cur_idx := 0 if not wildcard else components.find(wildcard)
+	var new_idx := (cur_idx + 1) % components.size()
+	wildcard = components[new_idx]
 
 func regenerate_potion(potion:String):
 	var cur_length = dict[potion].size()

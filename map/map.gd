@@ -143,7 +143,10 @@ func assign_machines() -> void:
 	var freq_scalar = GConfig.machine_frequency_scalar[GInput.get_player_count()]
 	var freq_dict:Dictionary = {}
 	for elem in GConfig.machines_included:
-		var freq_bounds = GDict.MACHINES[elem].freq.duplicate(true)
+		var data = GDict.MACHINES[elem]
+		if data.dynamic: continue
+		
+		var freq_bounds = data.freq.duplicate(true)
 		freq_bounds.min *= freq_scalar
 		freq_bounds.max *= freq_scalar
 		
@@ -154,12 +157,14 @@ func assign_machines() -> void:
 	var valid_cells := query_cells({ "edge": false, "empty": true, "num": num_machines_needed })
 	
 	for elem in freq_dict:
-		for _i in range(freq_dict[elem]):
+		
+		var num_needed : int = freq_dict[elem]
+		for _i in range(num_needed):
 			var cell = valid_cells.pop_back()
 			cell.add_machine(elem)
 
+			# @TODO: I should've probably just initialized stuff in general here, also the recipe book
 			if elem == "wildcard": 
-				print("Should set wildcard")
 				cell.machine.set_visible_wildcard(recipes.wildcard)
 	
 func visualize_grid() -> void:
@@ -248,6 +253,7 @@ func query_cells(params:Dictionary) -> Array[Cell]:
 		var suitable = true
 		
 		if "exclude" in params:
+			if not params.exclude is Array: params.exclude = [params.exclude]
 			suitable = (not params.exclude.has(cell)) and suitable
 		
 		if "edge" in params:

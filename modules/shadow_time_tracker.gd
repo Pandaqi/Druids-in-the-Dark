@@ -15,7 +15,7 @@ func get_cur_time_diff() -> float:
 	return cur_time - last_time_change
 
 func get_total_time_in_shadow() -> float:
-	return time_in_shadow + get_cur_time_diff()
+	return (time_in_shadow + get_cur_time_diff()) / 1000.0 # msec -> sec
 
 func on_shadow_changed(in_shadow:bool) -> void:
 	if in_shadow: 
@@ -42,19 +42,18 @@ func check_if_should_mutate() -> void:
 	if randf() > GConfig.mutate_prob: return
 	
 	reset()
-	cell.trigger_shadow_event()
 	cell.mutate()
 
 func check_if_should_disappear() -> void:
 	if not GConfig.remove_dynamic_elements_in_shadow: return
 	
 	var elem = cell.get_element()
-	if not elem or not GDict.get_element_data(elem).dynamic: return
+	if not elem or not elem.is_dynamic(): return
 	
 	var should_disappear = get_total_time_in_shadow() >= GConfig.remove_dynamic_min_time
 	if not should_disappear: return
 	
 	reset()
-	cell.trigger_shadow_event()
 	cell.remove_element()
-	
+	cell.trigger_shadow_event()
+	GDict.feedback.emit(cell.get_position(), "Spikes Begone!")

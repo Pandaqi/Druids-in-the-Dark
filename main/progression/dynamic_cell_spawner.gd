@@ -29,4 +29,4 @@ func on_timer_timeout() -> void:
 	if valid_cells.size() <= 0: return
 	
 	var cell_picked = valid_cells.pop_back()
-	cell_picked.add_element("spikes")
+	cell_picked.add_machine("spikes")

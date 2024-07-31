@@ -39,9 +39,9 @@ func activate(m:Map, t:Tutorial, c:Countdown, s:Shadows, g:GameOver, p:Players, 
 	GDict.game_over.connect(on_game_over)
 	GDict.scored.connect(on_scored)
 
-	level = 0
+	set_level(0)
 	if OS.is_debug_build() and GConfig.debug_starting_level > 0:
-		level = GConfig.debug_starting_level
+		set_level(GConfig.debug_starting_level)
 	
 	tutorial.load_cumulative_properties_until(level)
 	generate()
@@ -140,10 +140,14 @@ func end_level(we_win:bool) -> void:
 	potion_order_balancer.on_level_ended()
 	dynamic_cell_spawner.on_level_ended()
 	
-	if we_win: level += 1
+	if we_win: set_level(level + 1)
 	game_over.appear(we_win, level)
 	audio_player.play()
 	get_tree().paused = true
+
+func set_level(l:int):
+	level = l
+	GConfig.cur_level = l
 
 func make_garbage_bin_permanent():
 	if not GConfig.garbage_bin_content_is_permanent: return

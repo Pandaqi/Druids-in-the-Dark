@@ -94,9 +94,13 @@ func remove_element() -> void:
 
 func mutate() -> void:
 	if not get_element(): return
+	var old_alpha := element.modulate.a
 	remove_element()
 	add_element(GDict.get_random_mutation())
+	element.modulate.a = old_alpha
 	GDict.feedback.emit(get_position(), "Mutate!")
+	
+	trigger_shadow_event()
 
 func trigger_shadow_event() -> void:
 	shadow_event_player.pitch_scale = randf_range(0.9, 1.1)
@@ -122,8 +126,9 @@ func add_machine(type:String) -> void:
 		tw.tween_property(node, "scale", Vector2.ONE, 0.15)
 		tw.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	
-	var module_scene = load(GDict.MACHINES[type].module_scene)
-	if module_scene:
+	var mod_scene_path : String = GDict.MACHINES[type].module_scene
+	if mod_scene_path:
+		var module_scene = load(mod_scene_path)
 		var mod = module_scene.instantiate()
 		node.add_child(mod)
 		machine = mod

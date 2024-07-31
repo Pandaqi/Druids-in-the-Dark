@@ -15,6 +15,10 @@ func activate(prog:Progression):
 	set_visible(false)
 
 func appear(we_win:bool, level:int):
+	# @QOL: slightly more time to see the level and why we won/lost
+	if not we_win: 
+		await get_tree().create_timer(0.55).timeout
+	
 	we_won = we_win
 	set_visible(true)
 	

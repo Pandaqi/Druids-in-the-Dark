@@ -52,6 +52,7 @@ var shadow_sprite_alpha := 0.66
 
 # how many rounds a single game/run can have at most
 # (at this point, it's at its biggest size and tutorials have run out)
+var cur_level := 0
 var max_levels_per_run := 20
 var prog_skip_bounds := { "min": 2, "max": 4 } # how many levels a property stays the same before it jumps to the next option
 
@@ -111,12 +112,12 @@ var map_spawns_potions := false
 var map_spawn_component_over_potion_prob := 0.66 # 2 out of 3 times, when both are allowed, it prefers spawning a component
 
 var mutate_elements_in_shadow := false
-var mutate_min_time := 10
-var mutate_check_tick := 1
-var mutate_prob := 0.2
+var mutate_min_time := 4
+var mutate_check_tick := 0.33
+var mutate_prob := 0.275
 
 var remove_dynamic_elements_in_shadow := false
-var remove_dynamic_min_time := 4
+var remove_dynamic_min_time := 2.5
 
 var potion_garbage_can_appear := false
 var potion_garbage_prob := 0.33
@@ -129,6 +130,8 @@ var delivered_components_create_effects := false # after delivering an order, th
 var orders_are_timed := false
 var def_order_duration := { "min": 14, "max": 24 }
 var order_duration_scalar := [0.0, 1.0, 1.1, 1.2, 1.33]
+var order_duration_prog_scalar_per_level := 1.0535
+var order_duration_prog_scalar_max := 3.0
 
 var customers_want_components := true
 var customer_want_component_prob := 0.75

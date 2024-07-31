@@ -28,9 +28,9 @@ const MACHINES : Dictionary = {
 	"recipe_book": { "frame": 10, "module_scene": "res://modules/machines/recipe_book.tscn", "dynamic": false, "freq": { "min": 1, "max": 1 } },
 	"order": { "frame": 11, "module_scene": "res://modules/machines/order.tscn", "dynamic": false },
 	"garbage_bin": { "frame": 12, "module_scene": "res://modules/machines/garbage_bin.tscn", "dynamic": false, "freq": { "min": 1, "max": 3 } },
-	"spikes": { "frame": 13, "module_scene": null, "dynamic": true, "freq": { "min": 0, "max": 5 } },
+	"spikes": { "frame": 13, "module_scene": "", "dynamic": true, "freq": { "min": 0, "max": 4 } },
 	"wildcard": { "frame": 14, "module_scene": "res://modules/machines/wildcard.tscn", "dynamic": false, "freq": { "min": 1, "max": 1 } },
-	"teleport": { "frame": 15, "module_scene": null, "dynamic": false, "freq": { "min": 2, "max": 3 } },
+	"teleport": { "frame": 15, "module_scene": "", "dynamic": false, "freq": { "min": 2, "max": 2 } },
 	"planter": { "frame": 16, "module_scene": "res://modules/machines/planter.tscn", "dynamic": false }
 }
 
@@ -46,8 +46,8 @@ const PLAYER_COLORS : Array[Color] = [
 const TUTORIAL_ORDER : Array[String] = [
 	"objective", 
 	"orders_core", "potions_core", "max_map_fullness", "machine_wildcard", "machine_garbage_bin", "shadow_mechanic_filter", "",
-	"orders_medium", "potions_medium", "shadow_mechanic_mutate", "machine_recipe_book", "machine_spikes", "",
-	"orders_advanced", "potions_advanced", "shadow_mechanic_delivery", "machine_teleport", "machine_garbage_bin_advanced", ""
+	"potions_medium", "machine_recipe_book", "orders_advanced", "shadow_mechanic_mutate", "machine_spikes", "",
+	"machine_teleport", "shadow_mechanic_delivery", "orders_medium", "potions_advanced",  "machine_garbage_bin_advanced", ""
 ]
 
 # When the level first starts, it sets all variables to TUTORIALS.default

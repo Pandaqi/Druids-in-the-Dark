@@ -40,7 +40,7 @@ func on_cell_entered(cell:Cell):
 
 	# first handle raw matches
 	for i in range(needed_components.size()-1,-1,-1):
-		var comp = needed_components[i]
+		var comp := needed_components[i]
 		if our_components.has(comp): 
 			needed_components.remove_at(i)
 			our_components.erase(comp)
@@ -48,7 +48,8 @@ func on_cell_entered(cell:Cell):
 	# for every non-wildcard ingredient REQUESTED, use a wildcard of ours
 	if recipes.has_wildcard():
 		for i in range(needed_components.size()-1,-1,-1):
-			var comp = needed_components[i]
+			var comp := needed_components[i]
+			if our_components.size() <= 0: break
 			if not recipes.is_wildcard(comp):
 				if our_components.has(recipes.wildcard):
 					needed_components.remove_at(i)
@@ -58,10 +59,13 @@ func on_cell_entered(cell:Cell):
 		
 		# for every wildcard ingredient REQUESTED, use any component of ours
 		for i in range(needed_components.size()-1,-1,-1):
-			var comp = needed_components[i]
+			var comp := needed_components[i]
+			if our_components.size() <= 0: break
 			if recipes.is_wildcard(comp):
 				our_components.pop_back()
 				needed_components.remove_at(i)
+			else:
+				break
 	
 	var is_match = our_components.size() <= 0 and needed_components.size() <= 0
 	cell.machine.on_visit(is_match, inventory)

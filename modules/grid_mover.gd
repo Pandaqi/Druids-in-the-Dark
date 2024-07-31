@@ -5,6 +5,7 @@ class_name ModuleGridMover extends Node
 var grid_pos : Vector2i
 var map : Map
 var busy : bool = false
+var locked : bool = false # this is an INPUT lock
 var last_movement_direction : Vector2i
 
 signal position_updated()
@@ -14,6 +15,12 @@ func activate(m:Map, input:ModuleInput) -> void:
 	self.map = m
 	input.movement_vector_update.connect(move)
 
+func lock(): 
+	locked = true
+
+func unlock():
+	locked = false
+
 func update_position(new_pos:Vector2i, instant:bool = false) -> void:
 	map.remove_player_from(grid_pos, entity)
 	grid_pos = new_pos
@@ -22,11 +29,13 @@ func update_position(new_pos:Vector2i, instant:bool = false) -> void:
 
 func teleport(new_pos:Vector2i) -> void:
 	if busy: return
+	unlock()
 	update_position(new_pos)
 
 func move(vec:Vector2i) -> void:
 	if vec.length() <= 0.03: return
 	if busy: return
+	if locked: return
 	
 	var new_pos = map.get_pos_after_move(grid_pos, vec)
 	var nothing_changed = new_pos.distance_squared_to(grid_pos) <= 0
@@ -36,6 +45,6 @@ func move(vec:Vector2i) -> void:
 	update_position(new_pos)
 
 func on_movement_done() -> void:
-	map.add_player_to(grid_pos, entity)
 	busy = false
+	map.add_player_to(grid_pos, entity)
 	cell_entered.emit(map.get_cell_at(grid_pos))

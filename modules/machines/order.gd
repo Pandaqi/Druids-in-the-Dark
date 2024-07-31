@@ -32,8 +32,9 @@ func is_occupied() -> bool:
 
 func start_timer() -> void:
 	if GConfig.orders_are_timed:
-		var order_dur_scalar = GConfig.order_duration_scalar[GInput.get_player_count()]
-		timer.wait_time = randf_range(GConfig.def_order_duration.min, GConfig.def_order_duration.max) * order_dur_scalar
+		var order_dur_scalar : float = GConfig.order_duration_scalar[GInput.get_player_count()]
+		var order_dur_prog_scalar : float = clamp(pow(GConfig.order_duration_prog_scalar_per_level, GConfig.cur_level), 1.0, GConfig.order_duration_prog_scalar_max)
+		timer.wait_time = randf_range(GConfig.def_order_duration.min, GConfig.def_order_duration.max) * order_dur_scalar * order_dur_prog_scalar
 		timer.timeout.connect(on_timer_timeout)
 		timer.start()
 	
@@ -96,6 +97,6 @@ func on_visit(is_match:bool, visitor_inventory:ModuleInventory) -> void:
 	if GConfig.wrong_order_is_garbage and not is_match:
 		visitor_inventory.clear()
 	
-	if GConfig.wrong_order_moves_machines and not is_match:
+	if GConfig.wrong_order_moves_machines and not is_match and visitor_inventory.has_content():
 		GDict.map_shuffle.emit()
 	
